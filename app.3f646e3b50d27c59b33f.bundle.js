@@ -17926,6 +17926,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         return ret;
     }
     exports.normalizeBooleanAttribute = normalizeBooleanAttribute;
+    function normalizeNumberAttribute(val) {
+        if (val === undefined || val === '' || val === 'undefined' || val === 'NaN') {
+            return undefined;
+        }
+        else if (val === null || val === 'null') {
+            return null;
+        }
+        else {
+            return Number(val);
+        }
+    }
+    exports.normalizeNumberAttribute = normalizeNumberAttribute;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -19798,6 +19810,32 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 
+/***/ "../packages/lookup/src/ux-lookup-configuration.ts":
+/*!*********************************************************!*\
+  !*** ../packages/lookup/src/ux-lookup-configuration.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var UxDefaultLookupConfiguration = /** @class */ (function () {
+        function UxDefaultLookupConfiguration() {
+            this.theme = void 0;
+            this.searchingMessage = 'Searching...';
+            this.notFoundMessage = 'Not found';
+            this.debounce = 850;
+        }
+        return UxDefaultLookupConfiguration;
+    }());
+    exports.UxDefaultLookupConfiguration = UxDefaultLookupConfiguration;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
 /***/ "../packages/lookup/src/ux-lookup-theme.ts":
 /*!*************************************************!*\
   !*** ../packages/lookup/src/ux-lookup-theme.ts ***!
@@ -19811,6 +19849,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     var UxLookupTheme = /** @class */ (function () {
         function UxLookupTheme() {
             this.themeKey = 'lookup';
+            this.transitionDuration = '125ms';
+            this.lookupBackground = '#F5F5F5';
+            this.lookupForeground = '#212121';
+            this.lookupElevation = '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)';
+            this.optionHoverBackground = 'rgba(0, 0, 0, 0.05)';
+            this.optionFocusedBackground = 'rgba(0, 0, 0, 0.1)';
         }
         return UxLookupTheme;
     }());
@@ -41575,6 +41619,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     exports.processDesignAttributes = design_attributes_1.processDesignAttributes;
     exports.PaperRipple = paper_ripple_1.PaperRipple;
     exports.normalizeBooleanAttribute = html_attributes_1.normalizeBooleanAttribute;
+    exports.normalizeNumberAttribute = html_attributes_1.normalizeNumberAttribute;
     exports.getBackgroundColorThroughParents = background_color_parent_1.getBackgroundColorThroughParents;
     exports.UxChoiceAttribute = ux_choice_attribute_1.UxChoiceAttribute;
     exports.UxChoiceContainerAttribute = ux_choice_container_attribute_1.UxChoiceContainerAttribute;
@@ -43682,19 +43727,23 @@ module.exports = "<template role=\"list\" class=\"ux-list\">\n  <require from=\"
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-lookup */ "@aurelia-ux/lookup/ux-lookup"), __webpack_require__(/*! ./ux-lookup-theme */ "../packages/lookup/src/ux-lookup-theme.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_framework_1, aurelia_binding_1, core_1, ux_lookup_1, ux_lookup_theme_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-lookup-configuration */ "../packages/lookup/src/ux-lookup-configuration.ts"), __webpack_require__(/*! ./ux-lookup */ "@aurelia-ux/lookup/ux-lookup"), __webpack_require__(/*! ./ux-lookup-theme */ "../packages/lookup/src/ux-lookup-theme.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_framework_1, aurelia_binding_1, core_1, ux_lookup_configuration_1, ux_lookup_1, ux_lookup_theme_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.UxLookup = ux_lookup_1.UxLookup;
     exports.UxLookupTheme = ux_lookup_theme_1.UxLookupTheme;
-    function configure(config) {
-        config.container.get(core_1.AureliaUX).registerUxElementConfig(uxSelectConfig);
-        config.globalResources([
+    function configure(frameworkConfig, callback) {
+        frameworkConfig.container.get(core_1.AureliaUX).registerUxElementConfig(uxLookupConfig);
+        frameworkConfig.globalResources([
             './ux-lookup'
         ]);
+        if (typeof callback === 'function') {
+            var config = frameworkConfig.container.get(ux_lookup_configuration_1.UxDefaultLookupConfiguration);
+            callback(config);
+        }
     }
     exports.configure = configure;
-    var uxSelectConfig = {
+    var uxLookupConfig = {
         tagName: 'ux-lookup',
         properties: {
             value: {
@@ -43718,20 +43767,30 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js"), __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! ./discardable-promise */ "../packages/lookup/src/discardable-promise.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, tslib_1, aurelia_framework_1, discardable_promise_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js"), __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./discardable-promise */ "../packages/lookup/src/discardable-promise.ts"), __webpack_require__(/*! ./ux-lookup-configuration */ "../packages/lookup/src/ux-lookup-configuration.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, tslib_1, aurelia_framework_1, core_1, discardable_promise_1, ux_lookup_configuration_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var UP = 38;
     var DOWN = 40;
     var ENTER = 13;
     var UxLookup = /** @class */ (function () {
-        function UxLookup(element, taskQueue) {
+        function UxLookup(element, taskQueue, defaultConfiguration, styleEngine) {
             this.element = element;
             this.taskQueue = taskQueue;
+            this.defaultConfiguration = defaultConfiguration;
+            this.styleEngine = styleEngine;
             this.isOpen = false;
             this.focusedOption = undefined;
+            this.searching = false;
+            this.errorMessage = undefined;
+            this.notFound = false;
             this.getDisplay = function (option) { return option.toString(); };
             this.getValue = function (option) { return option; };
+            this.debounceNumber = this.defaultConfiguration.debounce;
+            this.debounce = this.defaultConfiguration.debounce;
+            if (this.defaultConfiguration.theme) {
+                this.theme = this.defaultConfiguration.theme;
+            }
         }
         UxLookup_1 = UxLookup;
         UxLookup.prototype.displayFieldChanged = function () {
@@ -43768,14 +43827,20 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
         };
         UxLookup.prototype.getOptionsDefault = function (filter, value) {
-            var _this = this;
-            var options = this.options;
-            if (value) {
-                return Promise.resolve([options.find(function (x) { return _this.getValue(x) === value; })]);
-            }
-            else {
-                return Promise.resolve(options.filter(function (x) { return _this.getDisplay(x).toUpperCase().includes(filter.toUpperCase()); }));
-            }
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var options;
+                var _this = this;
+                return tslib_1.__generator(this, function (_a) {
+                    options = this.options;
+                    if (value) {
+                        return [2 /*return*/, Promise.resolve([options.find(function (x) { return _this.getValue(x) === value; })])];
+                    }
+                    else {
+                        return [2 /*return*/, Promise.resolve(options.filter(function (x) { return _this.getDisplay(x).toUpperCase().includes(filter.toUpperCase()); }))];
+                    }
+                    return [2 /*return*/];
+                });
+            });
         };
         UxLookup.prototype.valueChanged = function () {
             return tslib_1.__awaiter(this, void 0, void 0, function () {
@@ -43789,6 +43854,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                             return [4 /*yield*/, this.updateFilterBasedOnValue()];
                         case 1:
                             _a.sent();
+                            this.element.dispatchEvent(new CustomEvent('change', { detail: { value: this.value } }));
                             return [2 /*return*/];
                     }
                 });
@@ -43800,6 +43866,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
             this.suppressValueChanged = true;
             this.value = value;
+        };
+        UxLookup.prototype.themeChanged = function (newValue) {
+            if (newValue != null && newValue.themeKey == null) {
+                newValue.themeKey = 'modal';
+            }
+            this.styleEngine.applyTheme(newValue, this.element);
+        };
+        UxLookup.prototype.debounceChanged = function () {
+            this.debounceNumber = core_1.normalizeNumberAttribute(this.debounce);
         };
         UxLookup.prototype.bind = function () {
             this.valueFieldChanged();
@@ -43825,26 +43900,43 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         };
         UxLookup.prototype.open = function () {
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var inputRect;
                 var _this = this;
                 return tslib_1.__generator(this, function (_a) {
                     if (this.isOpen) {
                         return [2 /*return*/];
                     }
-                    if (this.inputElement) {
-                        inputRect = this.inputElement.getBoundingClientRect();
-                        this.anchor = {
-                            x: inputRect.left,
-                            y: inputRect.top + inputRect.height + 3,
-                            maxHeight: window.innerHeight - inputRect.top - inputRect.height + document.body.scrollTop - 5,
-                            width: inputRect.width
-                        };
-                        window.addEventListener('wheel', this);
-                    }
+                    this.updateAnchor();
+                    window.addEventListener('wheel', this);
                     this.taskQueue.queueTask(function () { return _this.isOpen = true; });
                     return [2 /*return*/];
                 });
             });
+        };
+        UxLookup.prototype.updateAnchor = function () {
+            if (!this.inputElement) {
+                return;
+            }
+            var inputRect = this.inputElement.getBoundingClientRect();
+            var availableHeight = window.innerHeight - inputRect.top - inputRect.height + document.body.scrollTop - 5;
+            if (availableHeight > 100) {
+                this.anchor = {
+                    left: inputRect.left,
+                    top: inputRect.top + inputRect.height + 3 + "px",
+                    bottom: undefined,
+                    maxHeight: availableHeight,
+                    width: inputRect.width
+                };
+            }
+            else {
+                availableHeight = inputRect.top - document.body.scrollTop - 5;
+                this.anchor = {
+                    left: inputRect.left,
+                    top: undefined,
+                    bottom: window.innerHeight - availableHeight + 3 + "px",
+                    maxHeight: availableHeight,
+                    width: inputRect.width
+                };
+            }
         };
         UxLookup.prototype.close = function () {
             this.isOpen = false;
@@ -43887,35 +43979,60 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
         };
         UxLookup.prototype.filterChanged = function () {
-            var _a;
+            var _a, _b;
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var _b, e_1;
-                return tslib_1.__generator(this, function (_c) {
-                    switch (_c.label) {
+                var e_1, _c, e_2;
+                var _this = this;
+                return tslib_1.__generator(this, function (_d) {
+                    switch (_d.label) {
                         case 0:
                             if (this.suppressFilterChanged) {
                                 this.suppressFilterChanged = false;
                                 return [2 /*return*/];
                             }
-                            this.setValue(undefined);
-                            discardable_promise_1.discard(this.searchPromise);
-                            _c.label = 1;
+                            discardable_promise_1.discard(this.debouncePromise);
+                            this.debouncePromise = new discardable_promise_1.DiscardablePromise(new Promise(function (r) { var _a; return setTimeout(function () { return r(); }, (_a = _this.debounceNumber, (_a !== null && _a !== void 0 ? _a : 0))); }));
+                            _d.label = 1;
                         case 1:
-                            _c.trys.push([1, 3, , 4]);
-                            this.searchPromise = new discardable_promise_1.DiscardablePromise(this.getOptions((_a = this.inputElement) === null || _a === void 0 ? void 0 : _a.value, undefined));
-                            _b = this;
-                            return [4 /*yield*/, this.searchPromise];
+                            _d.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, this.debouncePromise];
                         case 2:
-                            _b.optionsArray = _c.sent();
+                            _d.sent();
                             return [3 /*break*/, 4];
                         case 3:
-                            e_1 = _c.sent();
-                            if (e_1 !== discardable_promise_1.DiscardablePromise.discarded) {
-                                //TODO: indicate an error
-                                // this.options = [MdLookup.error, e.message];
+                            e_1 = _d.sent();
+                            return [2 /*return*/];
+                        case 4:
+                            this.setValue(undefined);
+                            discardable_promise_1.discard(this.searchPromise);
+                            if (!this.isOpen) {
+                                this.open();
                             }
-                            return [3 /*break*/, 4];
-                        case 4: return [2 /*return*/];
+                            this.searching = true;
+                            this.errorMessage = undefined;
+                            this.notFound = false;
+                            this.optionsArray = [];
+                            _d.label = 5;
+                        case 5:
+                            _d.trys.push([5, 7, 8, 9]);
+                            this.searchPromise = new discardable_promise_1.DiscardablePromise(this.getOptions((_a = this.inputElement) === null || _a === void 0 ? void 0 : _a.value, undefined));
+                            _c = this;
+                            return [4 /*yield*/, this.searchPromise];
+                        case 6:
+                            _c.optionsArray = _d.sent();
+                            this.notFound = !((_b = this.optionsArray) === null || _b === void 0 ? void 0 : _b.length);
+                            this.updateAnchor();
+                            return [3 /*break*/, 9];
+                        case 7:
+                            e_2 = _d.sent();
+                            if (e_2 !== discardable_promise_1.DiscardablePromise.discarded) {
+                                this.errorMessage = e_2.message;
+                            }
+                            return [3 /*break*/, 9];
+                        case 8:
+                            this.searching = false;
+                            return [7 /*endfinally*/];
+                        case 9: return [2 /*return*/];
                     }
                 });
             });
@@ -44018,8 +44135,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         tslib_1.__decorate([
             aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
         ], UxLookup.prototype, "value", void 0);
+        tslib_1.__decorate([
+            aurelia_framework_1.bindable
+        ], UxLookup.prototype, "theme", void 0);
+        tslib_1.__decorate([
+            aurelia_framework_1.bindable
+        ], UxLookup.prototype, "debounce", void 0);
         UxLookup = UxLookup_1 = tslib_1.__decorate([
-            aurelia_framework_1.inject(Element, aurelia_framework_1.TaskQueue),
+            aurelia_framework_1.inject(Element, aurelia_framework_1.TaskQueue, ux_lookup_configuration_1.UxDefaultLookupConfiguration, core_1.StyleEngine),
             aurelia_framework_1.customElement('ux-lookup'),
             aurelia_framework_1.useView('./ux-lookup.html')
         ], UxLookup);
@@ -44041,7 +44164,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 exports = module.exports = __webpack_require__(/*! ../../../app/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "ux-lookup {\n  display: block;\n  position: fixed;\n  opacity: 0;\n  z-index: 9999;\n  -webkit-transform: scale(0.7, 0.7);\n          transform: scale(0.7, 0.7);\n  -webkit-transition: -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  -webkit-transition-duration: var(--aurelia-ux--lookup-list-transition, 125ms);\n          transition-duration: var(--aurelia-ux--lookup-list-transition, 125ms);\n  overflow-y: auto;\n}\n\nux-lookup:focus {\n  outline: none;\n}\n\nux-lookup.ux-lookup--open {\n  opacity: 1;\n  background-color: #F5F5F5;\n  background-color: var(--aurelia-ux--lookup-list-background, var(--aurelia-ux--design-surface-background, #F5F5F5));\n  color: #212121;\n  color: var(--aurelia-ux--lookup-list-foreground, var(--aurelia-ux--design-surface-foreground, #212121));\n  -webkit-transform: scale(1, 1);\n          transform: scale(1, 1);\n  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  -webkit-box-shadow: var(--aurelia-ux--lookup-list-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n          box-shadow: var(--aurelia-ux--lookup-list-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n}\n\nux-lookup .ux-lookup__option {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  max-width: 100%;\n  height: 48px;\n  padding: 0 16px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  text-align: left;\n  cursor: pointer;\n}\n\nux-lookup .ux-lookup__option:hover {\n  background-color: var(--aurelia-ux--lookup-option-hover, rgba(0, 0, 0, 0.05));\n}\n\nux-lookup .ux-lookup__option.ux-lookup__option--focused {\n  background-color: var(--aurelia-ux--lookup-option-focused, rgba(0, 0, 0, 0.1));\n}", ""]);
+exports.push([module.i, "ux-lookup {\n  display: block;\n  position: fixed;\n  opacity: 0;\n  z-index: 9999;\n  -webkit-transform: scale(0.7, 0.7);\n          transform: scale(0.7, 0.7);\n  -webkit-transition: -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  -webkit-transition-duration: var(--aurelia-ux--lookup-transition-duration, 125ms);\n          transition-duration: var(--aurelia-ux--lookup-transition-duration, 125ms);\n  overflow-y: auto;\n}\n\nux-lookup:focus {\n  outline: none;\n}\n\nux-lookup.ux-lookup--open {\n  opacity: 1;\n  background-color: #F5F5F5;\n  background-color: var(--aurelia-ux--lookup-background, var(--aurelia-ux--design-surface-background, #F5F5F5));\n  color: #212121;\n  color: var(--aurelia-ux--lookup-foreground, var(--aurelia-ux--design-surface-foreground, #212121));\n  -webkit-transform: scale(1, 1);\n          transform: scale(1, 1);\n  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  -webkit-box-shadow: var(--aurelia-ux--lookup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n          box-shadow: var(--aurelia-ux--lookup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n}\n\nux-lookup .ux-lookup__option {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  max-width: 100%;\n  height: 48px;\n  padding: 0 16px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  text-align: left;\n  cursor: pointer;\n}\n\nux-lookup .ux-lookup__option:hover {\n  background-color: var(--aurelia-ux--lookup-option-hover-background, rgba(0, 0, 0, 0.05));\n}\n\nux-lookup .ux-lookup__option.ux-lookup__option--focused {\n  background-color: var(--aurelia-ux--lookup-option-focused-background, rgba(0, 0, 0, 0.1));\n}", ""]);
 
 
 /***/ }),
@@ -44053,7 +44176,7 @@ exports.push([module.i, "ux-lookup {\n  display: block;\n  position: fixed;\n  o
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<template class=\"ux-lookup--${isOpen ? 'open' : 'closed'}\"\r\n  css=\"top: ${anchor.y}px; left: ${anchor.x}px; max-height: ${anchor.maxHeight}px; width: ${anchor.width}px\" tabindex=\"0\">\r\n  <require from=\"./ux-lookup.css\"></require>\r\n\r\n  <div repeat.for=\"option of optionsArray\"\r\n    class=\"ux-lookup__option ${option===focusedOption ? 'ux-lookup__option--focused' : ''}\"\r\n    mousedown.delegate=\"select(option)\">\r\n    <template replaceable part=\"option\">\r\n      ${getDisplay(option)}\r\n    </template>\r\n  </div>\r\n</template>\r\n";
+module.exports = "<template class=\"ux-lookup--${isOpen ? 'open' : 'closed'}\"\n  css=\"top: ${anchor.top}; bottom: ${anchor.bottom}; left: ${anchor.left}px; max-height: ${anchor.maxHeight}px; width: ${anchor.width}px\"\n  tabindex=\"-1\">\n  <require from=\"./ux-lookup.css\"></require>\n\n  <div class=\"ux-lookup__option ux-lookup__option-searching\" if.bind=\"searching\">\n    <template replaceable part=\"searching\">\n      ${defaultConfiguration.searchingMessage}\n    </template>\n  </div>\n\n  <div class=\"ux-lookup__option ux-lookup__option-error\" if.bind=\"errorMessage\">\n    <template replaceable part=\"error\">\n      ${errorMessage}\n    </template>\n  </div>\n\n  <div class=\"ux-lookup__option ux-lookup__option-not-found\" if.bind=\"notFound\">\n    <template replaceable part=\"not-found\">\n      ${defaultConfiguration.notFoundMessage}\n    </template>\n  </div>\n\n  <div repeat.for=\"option of optionsArray\"\n    class=\"ux-lookup__option ${option===focusedOption ? 'ux-lookup__option--focused' : ''}\"\n    mousedown.delegate=\"select(option)\">\n    <template replaceable part=\"option\">\n      ${getDisplay(option)}\n    </template>\n  </div>\n</template>\n";
 
 /***/ }),
 
@@ -52005,7 +52128,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<template>\r\n  <require from=\"./theming.css\"></require>\r\n  <require from='./json-converter'></require>\r\n\r\n  <section>\r\n    <h1>Components</h1>\r\n    <p>Demo of each component and diverse styles and types</p>\r\n  </section>\r\n\r\n  <section>\r\n    <h2>Lookup</h2>\r\n    <p>\r\n      <ux-input label=\"Lookup\"></ux-input>\r\n      <ux-lookup options.bind=\"lookupOptions\" display-field=\"name\" value.bind=\"lookupValue\">\r\n        <!-- <template replace-part=\"option\">\r\n\r\n        </template> -->\r\n      </ux-lookup>\r\n    </p>\r\n    <p innerhtml.bind=\"lookupValue | json\"></p>\r\n</section>\r\n\r\n  <section>\r\n    <h2>Buttons</h2>\r\n  \r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"4\">\r\n        <h4>Primary (default)</h4>\r\n        <p><ux-button type=\"raised\">Raised</ux-button></p>\r\n        <p><ux-button type=\"flat\">Flat</ux-button></p>\r\n        <p><ux-button type=\"text\">Text</ux-button></p>\r\n        <p><ux-button type=\"outline\">Outline</ux-button></p>\r\n        <p><ux-button type=\"fab\">Fab</ux-button></p>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"4\">\r\n        <h4>Accent (.ux-button--accent)</h4>\r\n        <p><ux-button class=\"ux-button--accent\" type=\"raised\">Raised</ux-button></p>\r\n        <p><ux-button class=\"ux-button--accent\" type=\"flat\">Flat</ux-button></p>\r\n        <p><ux-button class=\"ux-button--accent\" type=\"text\">Text</ux-button></p>\r\n        <p><ux-button class=\"ux-button--accent\" type=\"outline\">Outline</ux-button></p>\r\n        <p><ux-button class=\"ux-button--accent\" type=\"fab\">Fab</ux-button></p>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"4\">\r\n        <h4>Disabled (disabled)</h4>\r\n        <p><ux-button disabled type=\"raised\">Raised</ux-button></p>\r\n        <p><ux-button disabled type=\"flat\">Flat</ux-button></p>\r\n        <p><ux-button disabled type=\"text\">Text</ux-button></p>\r\n        <p><ux-button disabled type=\"outline\">Outline</ux-button></p>\r\n        <p><ux-button disabled type=\"fab\">Fab</ux-button></p>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n  \r\n  <section>\r\n    <h2>Input & Input Info</h2>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Default</h4>\r\n        <p><ux-input placeholder=\"With placeholder\"></ux-input></p>\r\n        <p>\r\n          <ux-input label=\"With floating label\" maxlength.bind=\"50\"></ux-input>\r\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\r\n        </p>\r\n        <p>\r\n          <ux-input class=\"ux-input-component--has-error\" label=\"With error\">\r\n              <ux-icon icon=\"error\" slot=\"trailing-icon\"></ux-icon>\r\n          </ux-input>\r\n          <ux-input-info>Error message</ux-input-info>\r\n        </p>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Icons</h4>\r\n        <p><ux-input label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input></p>\r\n        <p><ux-input label=\"With trailing icon\"><ux-icon icon=\"remove_red_eye\" slot=\"trailing-icon\"></ux-icon></ux-input></p>\r\n        <h4>Outline</h4>\r\n        <p>\r\n          <ux-input variant=\"outline\" label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input>\r\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\r\n        </p>\r\n        <p>\r\n          <ux-input variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-input>\r\n          <ux-input-info>Error message</ux-input-info>\r\n        </p>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n\r\n  <section>\r\n    <h2>Textarea & Input Info</h2>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Filled</h4>\r\n        <p><ux-textarea placeholder=\"With placeholder\"></ux-textarea></p>\r\n        <p>\r\n          <ux-textarea label=\"With floating label\" auto-resize></ux-textarea>\r\n        </p>\r\n        <p>\r\n          <ux-textarea class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea>\r\n        </p>\r\n        <p>\r\n          <ux-textarea auto-resize label=\"Auto Resize\"></ux-textarea>\r\n        </p>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Outline</h4>\r\n        <p>\r\n          <ux-textarea variant=\"outline\" label=\"Default\"></ux-textarea>\r\n        </p>\r\n        <p>\r\n          <ux-textarea variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea>\r\n        </p>\r\n        <p>\r\n          <ux-textarea variant=\"outline\" auto-resize label=\"Auto Resize\"></ux-textarea>\r\n        </p>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n\r\n  <section>\r\n    <h2>Select & Input Info</h2>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Filled</h4>\r\n        <p><ux-select placeholder=\"Choose an option\">\r\n          <ux-option>Option 1</ux-option>\r\n          <ux-option>Option 2</ux-option>\r\n          <ux-option>Option 3</ux-option>\r\n          <ux-option>Option 4</ux-option>\r\n          <ux-option>Option 5</ux-option>\r\n        </ux-select></p>\r\n        <p>\r\n          <ux-select label=\"With floating label\">\r\n            <ux-option>Option 1</ux-option>\r\n            <ux-option>Option 2</ux-option>\r\n            <ux-option>Option 3</ux-option>\r\n            <ux-option>Option 4</ux-option>\r\n            <ux-option>Option 5</ux-option>\r\n          </ux-select>\r\n        </p>\r\n        <p>\r\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\">\r\n            <ux-option>Option 1</ux-option>\r\n            <ux-option>Option 2</ux-option>\r\n            <ux-option>Option 3</ux-option>\r\n            <ux-option>Option 4</ux-option>\r\n            <ux-option>Option 5</ux-option>\r\n          </ux-select>\r\n        </p>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Outline</h4>\r\n        <p><ux-select variant=\"outline\" placeholder=\"Choose an option\">\r\n          <ux-option>Option 1</ux-option>\r\n          <ux-option>Option 2</ux-option>\r\n          <ux-option>Option 3</ux-option>\r\n          <ux-option>Option 4</ux-option>\r\n          <ux-option>Option 5</ux-option>\r\n        </ux-select></p>\r\n        <p>\r\n          <ux-select label=\"With floating label\" variant=\"outline\">\r\n            <ux-option>Option 1</ux-option>\r\n            <ux-option>Option 2</ux-option>\r\n            <ux-option>Option 3</ux-option>\r\n            <ux-option>Option 4</ux-option>\r\n            <ux-option>Option 5</ux-option>\r\n          </ux-select>\r\n        </p>\r\n        <p>\r\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\" variant=\"outline\">\r\n            <ux-option>Option 1</ux-option>\r\n            <ux-option>Option 2</ux-option>\r\n            <ux-option>Option 3</ux-option>\r\n            <ux-option>Option 4</ux-option>\r\n            <ux-option>Option 5</ux-option>\r\n          </ux-select>\r\n        </p>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n\r\n  <section>\r\n    <h2>Datepicker & Input Info</h2>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Default</h4>\r\n        <p><ux-datepicker placeholder=\"With placeholder\"></ux-datepicker></p>\r\n        <p>\r\n          <ux-datepicker label=\"With floating label\"></ux-datepicker>\r\n          <ux-input-info>And helper text</ux-input-info>\r\n        </p>\r\n        <p>\r\n          <ux-datepicker label=\"With icon\">\r\n            <ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon>\r\n          </ux-datepicker>\r\n          <ux-input-info>And helper text</ux-input-info>\r\n        </p>\r\n        <p>\r\n          <ux-datepicker class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\r\n          <ux-input-info>Error message</ux-input-info>\r\n        </p>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Outline</h4>\r\n        <p>\r\n          <ux-datepicker variant=\"outline\" label=\"Outline datepicker\"></ux-datepicker>\r\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\r\n        </p>\r\n        <p>\r\n          <ux-datepicker variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\r\n          <ux-input-info>Error message</ux-input-info>\r\n        </p>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n\r\n  <section>\r\n    <h2>Slider</h2>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Slider (default)</h4>\r\n        <p><ux-slider min=\"0\" max=\"100\"></ux-slider></p>\r\n        <h4>With icons</h4>\r\n        <p><ux-slider min=\"0\" max=\"100\">\r\n          <ux-icon icon=\"volume_down\" slot=\"leading-icon\"></ux-icon>\r\n          <ux-icon icon=\"volume_up\" slot=\"trailing-icon\"></ux-icon>\r\n        </ux-slider></p>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>With value</h4>\r\n        <p>\r\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderRValue\" theme.bind=\"{background: 'red'}\">\r\n            <span slot=\"leading-icon\">R</span>\r\n            <span slot=\"trailing-icon\">${sliderRValue}</span>\r\n          </ux-slider>\r\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderGValue\" theme.bind=\"{background: 'green'}\">\r\n            <span slot=\"leading-icon\">G</span>\r\n            <span slot=\"trailing-icon\">${sliderGValue}</span>\r\n          </ux-slider>\r\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderBValue\" theme.bind=\"{background: 'blue'}\">\r\n            <span slot=\"leading-icon\">B</span>\r\n            <span slot=\"trailing-icon\">${sliderBValue}</span>\r\n          </ux-slider>\r\n        </p>\r\n        <p style=\"text-align: center;\" css=\"color: rgb(${sliderRValue}, ${sliderGValue}, ${sliderBValue})\">Look at my beautiful color !</p>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n\r\n  <section>\r\n    <h2>Selection Controls: checkbox and radio</h2>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Checkbox</h4>\r\n        <ux-field>\r\n          <label>Interests</label>\r\n          <div class=\"ux-form__row\">\r\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'sport'\"></ux-checkbox>\r\n            <label>Sport</label>\r\n          </div>\r\n          <div class=\"ux-form__row\">\r\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'technology'\"></ux-checkbox>\r\n            <label>Technology</label>\r\n          </div>\r\n          <div class=\"ux-form__row\">\r\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'business'\"></ux-checkbox>\r\n            <label>Business</label>\r\n          </div>\r\n        </ux-field>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <h4>Radio</h4>\r\n        <ux-field>\r\n          <label>Age Group</label>\r\n          <div class=\"ux-form__row\">\r\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'0-20'\"></ux-radio>\r\n            <label>0-20</label>\r\n          </div>\r\n          <div class=\"ux-form__row\">\r\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'20-40'\"></ux-radio>\r\n            <label>20-40</label>\r\n          </div>\r\n          <div class=\"ux-form__row\">\r\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'40+'\"></ux-radio>\r\n            <label>40+</label>\r\n          </div>\r\n        </ux-field>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n\r\n  <section>\r\n    <h2>Selection Controls: chips and lists</h2>\r\n    <h4>Chips</h4>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <ux-field>\r\n          <label>Interests</label>\r\n          <ux-chip-list ux-choice-container.bind=\"interests\">\r\n            <ux-chip ux-choice=\"sport\">Sport</ux-chip>\r\n            <ux-chip ux-choice=\"technology\">Technology</ux-chip>\r\n            <ux-chip ux-choice=\"business\">Business</ux-chip>\r\n          </ux-chip-list>\r\n        </ux-field>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <ux-field>\r\n          <label>Interests</label>\r\n          <ux-chip-list ux-choice-container.bind=\"ageGroup\">\r\n            <ux-chip ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-chip>\r\n            <ux-chip ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-chip>\r\n            <ux-chip ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-chip>\r\n          </ux-chip-list>\r\n        </ux-field>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n\r\n    <h4>List</h4>\r\n    <ux-grid class=\"ux-grid--remove-padding\">\r\n      <ux-grid-cell sm=\"6\">\r\n        <ux-field>\r\n          <label>Interests</label>\r\n          <div class=\"ux-form__row\">\r\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"interests2\">\r\n              <ux-list-item ux-choice=\"sport\">\r\n                <div class=\"ux-list-item__content\">Sport</div>\r\n              </ux-list-item>\r\n              <ux-list-item ux-choice=\"technology\">\r\n                <div class=\"ux-list-item__content\">Technology</div>\r\n              </ux-list-item>\r\n              <ux-list-item ux-choice=\"business\">\r\n                <div class=\"ux-list-item__content\">Business</div>\r\n              </ux-list-item>\r\n            </ux-list>\r\n          </div>\r\n        </ux-field>\r\n      </ux-grid-cell>\r\n      <ux-grid-cell sm=\"6\">\r\n        <ux-field>\r\n          <label>Interests</label>\r\n          <div class=\"ux-form__row\">\r\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"ageGroup2\">\r\n              <ux-list-item ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-list-item>\r\n              <ux-list-item ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-list-item>\r\n              <ux-list-item ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-list-item>\r\n            </ux-list>\r\n          </div>\r\n        </ux-field>\r\n      </ux-grid-cell>\r\n    </ux-grid>\r\n  </section>\r\n\r\n  <section></section>\r\n</template>\r\n";
+module.exports = "<template>\n  <require from=\"./theming.css\"></require>\n  <require from='./json-converter'></require>\n\n  <section>\n    <h1>Components</h1>\n    <p>Demo of each component and diverse styles and types</p>\n  </section>\n\n  <section>\n    <h2>Buttons</h2>\n  \n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"4\">\n        <h4>Primary (default)</h4>\n        <p><ux-button type=\"raised\">Raised</ux-button></p>\n        <p><ux-button type=\"flat\">Flat</ux-button></p>\n        <p><ux-button type=\"text\">Text</ux-button></p>\n        <p><ux-button type=\"outline\">Outline</ux-button></p>\n        <p><ux-button type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"4\">\n        <h4>Accent (.ux-button--accent)</h4>\n        <p><ux-button class=\"ux-button--accent\" type=\"raised\">Raised</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"flat\">Flat</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"text\">Text</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"outline\">Outline</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"4\">\n        <h4>Disabled (disabled)</h4>\n        <p><ux-button disabled type=\"raised\">Raised</ux-button></p>\n        <p><ux-button disabled type=\"flat\">Flat</ux-button></p>\n        <p><ux-button disabled type=\"text\">Text</ux-button></p>\n        <p><ux-button disabled type=\"outline\">Outline</ux-button></p>\n        <p><ux-button disabled type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n  \n  <section>\n    <h2>Input & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Default</h4>\n        <p><ux-input placeholder=\"With placeholder\"></ux-input></p>\n        <p>\n          <ux-input label=\"With floating label\" maxlength.bind=\"50\"></ux-input>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-input class=\"ux-input-component--has-error\" label=\"With error\">\n              <ux-icon icon=\"error\" slot=\"trailing-icon\"></ux-icon>\n          </ux-input>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Icons</h4>\n        <p><ux-input label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input></p>\n        <p><ux-input label=\"With trailing icon\"><ux-icon icon=\"remove_red_eye\" slot=\"trailing-icon\"></ux-icon></ux-input></p>\n        <h4>Outline</h4>\n        <p>\n          <ux-input variant=\"outline\" label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-input variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-input>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Textarea & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Filled</h4>\n        <p><ux-textarea placeholder=\"With placeholder\"></ux-textarea></p>\n        <p>\n          <ux-textarea label=\"With floating label\" auto-resize></ux-textarea>\n        </p>\n        <p>\n          <ux-textarea class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea>\n        </p>\n        <p>\n          <ux-textarea auto-resize label=\"Auto Resize\"></ux-textarea>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p>\n          <ux-textarea variant=\"outline\" label=\"Default\"></ux-textarea>\n        </p>\n        <p>\n          <ux-textarea variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea>\n        </p>\n        <p>\n          <ux-textarea variant=\"outline\" auto-resize label=\"Auto Resize\"></ux-textarea>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Select & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Filled</h4>\n        <p><ux-select placeholder=\"Choose an option\">\n          <ux-option>Option 1</ux-option>\n          <ux-option>Option 2</ux-option>\n          <ux-option>Option 3</ux-option>\n          <ux-option>Option 4</ux-option>\n          <ux-option>Option 5</ux-option>\n        </ux-select></p>\n        <p>\n          <ux-select label=\"With floating label\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p><ux-select variant=\"outline\" placeholder=\"Choose an option\">\n          <ux-option>Option 1</ux-option>\n          <ux-option>Option 2</ux-option>\n          <ux-option>Option 3</ux-option>\n          <ux-option>Option 4</ux-option>\n          <ux-option>Option 5</ux-option>\n        </ux-select></p>\n        <p>\n          <ux-select label=\"With floating label\" variant=\"outline\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\" variant=\"outline\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Datepicker & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Default</h4>\n        <p><ux-datepicker placeholder=\"With placeholder\"></ux-datepicker></p>\n        <p>\n          <ux-datepicker label=\"With floating label\"></ux-datepicker>\n          <ux-input-info>And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker label=\"With icon\">\n            <ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon>\n          </ux-datepicker>\n          <ux-input-info>And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p>\n          <ux-datepicker variant=\"outline\" label=\"Outline datepicker\"></ux-datepicker>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Slider</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Slider (default)</h4>\n        <p><ux-slider min=\"0\" max=\"100\"></ux-slider></p>\n        <h4>With icons</h4>\n        <p><ux-slider min=\"0\" max=\"100\">\n          <ux-icon icon=\"volume_down\" slot=\"leading-icon\"></ux-icon>\n          <ux-icon icon=\"volume_up\" slot=\"trailing-icon\"></ux-icon>\n        </ux-slider></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>With value</h4>\n        <p>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderRValue\" theme.bind=\"{background: 'red'}\">\n            <span slot=\"leading-icon\">R</span>\n            <span slot=\"trailing-icon\">${sliderRValue}</span>\n          </ux-slider>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderGValue\" theme.bind=\"{background: 'green'}\">\n            <span slot=\"leading-icon\">G</span>\n            <span slot=\"trailing-icon\">${sliderGValue}</span>\n          </ux-slider>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderBValue\" theme.bind=\"{background: 'blue'}\">\n            <span slot=\"leading-icon\">B</span>\n            <span slot=\"trailing-icon\">${sliderBValue}</span>\n          </ux-slider>\n        </p>\n        <p style=\"text-align: center;\" css=\"color: rgb(${sliderRValue}, ${sliderGValue}, ${sliderBValue})\">Look at my beautiful color !</p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Selection Controls: checkbox and radio</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Checkbox</h4>\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'sport'\"></ux-checkbox>\n            <label>Sport</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'technology'\"></ux-checkbox>\n            <label>Technology</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'business'\"></ux-checkbox>\n            <label>Business</label>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Radio</h4>\n        <ux-field>\n          <label>Age Group</label>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'0-20'\"></ux-radio>\n            <label>0-20</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'20-40'\"></ux-radio>\n            <label>20-40</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'40+'\"></ux-radio>\n            <label>40+</label>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Selection Controls: chips and lists</h2>\n    <h4>Chips</h4>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <ux-chip-list ux-choice-container.bind=\"interests\">\n            <ux-chip ux-choice=\"sport\">Sport</ux-chip>\n            <ux-chip ux-choice=\"technology\">Technology</ux-chip>\n            <ux-chip ux-choice=\"business\">Business</ux-chip>\n          </ux-chip-list>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <ux-chip-list ux-choice-container.bind=\"ageGroup\">\n            <ux-chip ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-chip>\n            <ux-chip ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-chip>\n            <ux-chip ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-chip>\n          </ux-chip-list>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n\n    <h4>List</h4>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"interests2\">\n              <ux-list-item ux-choice=\"sport\">\n                <div class=\"ux-list-item__content\">Sport</div>\n              </ux-list-item>\n              <ux-list-item ux-choice=\"technology\">\n                <div class=\"ux-list-item__content\">Technology</div>\n              </ux-list-item>\n              <ux-list-item ux-choice=\"business\">\n                <div class=\"ux-list-item__content\">Business</div>\n              </ux-list-item>\n            </ux-list>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"ageGroup2\">\n              <ux-list-item ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-list-item>\n              <ux-list-item ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-list-item>\n              <ux-list-item ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-list-item>\n            </ux-list>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Lookup</h2>\n    <p>\n      <ux-input label=\"Lookup\"></ux-input>\n      <ux-lookup options.bind=\"lookupOptions\" display-field=\"name\" value.bind=\"lookupValue\">\n        <!-- <template replace-part=\"option\">\n\n        </template> -->\n      </ux-lookup>\n    </p>\n    <p innerhtml.bind=\"lookupValue | json\"></p>\n  </section>\n</template>\n";
 
 /***/ }),
 
@@ -52707,4 +52830,4 @@ module.exports = "<template>\n  <require from=\"./theming.css\"></require>\n\n  
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.88a90e4b073904126568.bundle.map
+//# sourceMappingURL=app.3f646e3b50d27c59b33f.bundle.map
