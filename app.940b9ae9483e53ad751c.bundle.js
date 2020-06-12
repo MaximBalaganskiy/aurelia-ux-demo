@@ -18256,8 +18256,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          */
         function ElementRect(element) {
             this.element = element;
-            this.width = this.boundingRect.width;
-            this.height = this.boundingRect.height;
+            var rect = this.boundingRect;
+            this.width = rect.width;
+            this.height = rect.height;
             this.size = Math.max(this.width, this.height);
         }
         Object.defineProperty(ElementRect.prototype, "center", {
@@ -18312,10 +18313,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * point inside this element's rectangle, otherwise `false`.
          */
         ElementRect.prototype.contains = function (ev) {
-            var l = this.boundingRect.left;
-            var t = this.boundingRect.top;
-            var w = this.boundingRect.width;
-            var h = this.boundingRect.height;
+            var rect = this.boundingRect;
+            var l = rect.left;
+            var t = rect.top;
+            var w = rect.width;
+            var h = rect.height;
             var x = ev.x || ev.clientX || 0;
             var y = ev.y || ev.clientY || 0;
             return x >= l && x <= l + w && y >= t && y <= t + h;
@@ -18541,11 +18543,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-pal */ "../node_modules/aurelia-pal/dist/es2015/aurelia-pal.js"), __webpack_require__(/*! ./element-rect */ "../packages/core/src/effects/element-rect.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_pal_1, element_rect_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // tslint:disable:variable-name
-    var _window = aurelia_pal_1.PLATFORM.global;
-    var _doc = _window.document;
-    var _now = aurelia_pal_1.PLATFORM.performance.now.bind(aurelia_pal_1.PLATFORM.performance);
-    // tslint:enable:variable-name
     /**
      * Provides all the logic to produce a one-time rippling effect.
      */
@@ -18554,16 +18551,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * Initializes a new instance of the `PaperWave` class with the specified `PaperRipple` instance.
          */
         function PaperWave(options) {
-            this.color = _window.getComputedStyle(options.$).color;
+            this.color = aurelia_pal_1.DOM.getComputedStyle(options.$).color;
             this.containerRect = new element_rect_1.ElementRect(options.$);
             this.recenters = options.recenters || false;
             this.center = options.center || false;
             this.initialOpacity = options.initialOpacity || 0.25;
             this.opacityDecayVelocity = options.opacityDecayVelocity || 0.8;
-            this.$wave = _doc.createElement('div');
+            this.$wave = aurelia_pal_1.DOM.createElement('div');
             this.$wave.classList.add('paper-ripple__wave');
             this.$wave.style.backgroundColor = this.color;
-            this.$ = _doc.createElement('div');
+            this.$ = aurelia_pal_1.DOM.createElement('div');
             this.$.classList.add('paper-ripple__wave-container');
             this.$.appendChild(this.$wave);
             this.resetDefaults();
@@ -18577,7 +18574,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 if (!this.touchDownStarted) {
                     return 0;
                 }
-                var elapsed = _now() - this.touchDownStarted;
+                var elapsed = aurelia_pal_1.PLATFORM.performance.now() - this.touchDownStarted;
                 if (this.touchUpStarted) {
                     elapsed -= this.touchUpElapsed;
                 }
@@ -18592,7 +18589,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
              * @returns The time in milliseconds.
              */
             get: function () {
-                return this.touchUpStarted ? _now() - this.touchUpStarted : 0;
+                return this.touchUpStarted ? aurelia_pal_1.PLATFORM.performance.now() - this.touchUpStarted : 0;
             },
             enumerable: true,
             configurable: true
@@ -18795,7 +18792,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             if (event === void 0) { event = null; }
             var containerCenter = this.containerRect.center;
             this.resetDefaults();
-            this.touchDownStarted = _now();
+            this.touchDownStarted = aurelia_pal_1.PLATFORM.performance.now();
             this.startPosition = this.center || !event ?
                 containerCenter :
                 {
@@ -18818,7 +18815,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             if (!this.isTouchDown) {
                 return this;
             }
-            this.touchUpStarted = _now();
+            this.touchUpStarted = aurelia_pal_1.PLATFORM.performance.now();
             return this;
         };
         /**
@@ -19743,6 +19740,28 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 
+/***/ "../packages/input/src/ux-default-input-configuration.ts":
+/*!***************************************************************!*\
+  !*** ../packages/input/src/ux-default-input-configuration.ts ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var UxDefaultInputConfiguration = /** @class */ (function () {
+        function UxDefaultInputConfiguration() {
+        }
+        return UxDefaultInputConfiguration;
+    }());
+    exports.UxDefaultInputConfiguration = UxDefaultInputConfiguration;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
 /***/ "../packages/input/src/ux-input-theme.ts":
 /*!***********************************************!*\
   !*** ../packages/input/src/ux-input-theme.ts ***!
@@ -19868,7 +19887,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     var UxLookupTheme = /** @class */ (function () {
         function UxLookupTheme() {
             this.themeKey = 'lookup';
-            this.transitionDuration = '125ms';
+            this.transitionDuration = UxLookupTheme.DEFAULT_TRANSITION_DURATION;
             this.background = '#F5F5F5';
             this.foreground = '#212121';
             this.elevation = '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)';
@@ -19881,6 +19900,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         UxLookupTheme.DEFAULT_INPUT_DISTANCE = 3;
         UxLookupTheme.DEFAULT_WINDOW_EDGE_DISTANCE = 15;
         UxLookupTheme.DEFAULT_BOTTOM_HEIGHT_THRESHOLD = 100;
+        UxLookupTheme.DEFAULT_TRANSITION_DURATION = '125ms';
         return UxLookupTheme;
     }());
     exports.UxLookupTheme = UxLookupTheme;
@@ -21081,6 +21101,28 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 
+/***/ "../packages/select/src/ux-default-select-configuration.ts":
+/*!*****************************************************************!*\
+  !*** ../packages/select/src/ux-default-select-configuration.ts ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var UxDefaultSelectConfiguration = /** @class */ (function () {
+        function UxDefaultSelectConfiguration() {
+        }
+        return UxDefaultSelectConfiguration;
+    }());
+    exports.UxDefaultSelectConfiguration = UxDefaultSelectConfiguration;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
 /***/ "../packages/select/src/ux-select-theme.ts":
 /*!*************************************************!*\
   !*** ../packages/select/src/ux-select-theme.ts ***!
@@ -21095,6 +21137,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         function UxSelectTheme() {
             this.themeKey = 'select';
         }
+        UxSelectTheme.DEFAULT_LIST_TRANSITION = '125ms';
         return UxSelectTheme;
     }());
     exports.UxSelectTheme = UxSelectTheme;
@@ -21594,7 +21637,7 @@ exports.push([module.i, "/* CALCULATIONS */\n.ux-input-component--outline {\n  -
 
 exports = module.exports = __webpack_require__(/*! ../../../../app/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "/* CUSTOMIZABLE VARIABLES */\n.ux-input-component {\n  --foreground: var(--aurelia-ux--design-control-foreground, #212121);\n  --foreground-label: var(--aurelia-ux--design-control-label-color, #757575);\n  --background: var(--aurelia-ux--design-control-background, #E0E0E0);\n  --background-hover: #00000027;\n  --active-color: var(--aurelia-ux--design-primary, #3F51B5);\n\n  --font-size: 16px;\n  --letter-spacing: inherit;\n  --label-font-size: 12px;\n  --label-letter-spacing: 0.5px;\n  --line-height: 1.6;\n  --label-line-height: 1.6;\n\n  --border-color: var(--aurelia-ux--design-control-label-color, #757575);\n  --border-radius: 4px;\n  --border-width: 1px;\n  --border-active-width: 2px;\n\n  --disabled-foreground: var(--aurelia-ux--design-disabled-foreground, #9E9E9E);\n  --disabled-background: var(--aurelia-ux--design-disabled-background, #e1e1e1);\n\n  --error: var(--aurelia-ux--design-error, #F44336);\n}\n\n/* CALCULATIONS */\n.ux-input-component {\n  --label-v-padding: 6px;\n  --inner-input-v-padding: 6px;\n  /* MIN HEIGHT OF OUTER COMPONENT */\n  --min-height: 58.8px;\n  --min-height: calc(\n    1 * var(--line-height, 1.6) * var(--font-size, 16px) +\n    1 * var(--label-line-height, 1.6) * var(--label-font-size, 12px) +\n    1 * var(--label-v-padding, 6px) + \n    1 * var(--inner-input-v-padding, 6px) + \n    2 * var(--border-width, 1px));\n  /* TRANSLATION OF LABEL WHEN INPUT IS EMPTY */\n  --half-h: 29.4px;\n  --half-h: calc(var(--min-height, 58.8px) / 2);\n  --abs-empty-label-pos: 13.6px;\n  --abs-empty-label-pos: calc(var(--half-h, 29.4px) - var(--font-size, 16px) * var(--line-height, 1.6) / 2 - var(--label-v-padding, 6px));\n  --empty-label-translation: 13.6px;\n  --empty-label-translation: calc(var(--abs-empty-label-pos, 13.6px));\n}\n.ux-input-component--dense.ux-input-component {\n  --label-v-padding: 2px;\n  --inner-input-v-padding: 2px;\n}\n\n/* OUTER DIV COMPONENT */\n.ux-input-component {\n  display: flex;\n  width: 100%;\n  min-height: 56px;\n  padding: 0 16px;\n  align-items: flex-start;\n  box-sizing: border-box;\n  position: relative;\n  color: #212121;\n  background-color: #E0E0E0;\n  border-radius: 4px;\n  color: var(--foreground, #E0E0E0);\n  background-color: var(--background, #212121);\n  border-radius: var(--border-radius, 4px);\n  min-height: var(--min-height, 58.8px);\n}\n\n\n/* LEADING AND TRAILING SLOTS */\n.ux-input-component [slot=\"leading-icon\"],\n.ux-input-component [slot=\"trailing-icon\"],\n.ux-input-component__leading,\n.ux-input-component__trailing {\n  flex-shrink: 0;\n  align-self: center;\n  display: inline-flex;\n  align-items: center;\n}\n.ux-input-component [slot=\"leading-icon\"],\n.ux-input-component__leading:not(empty) {\n  margin-right: 8px;\n}\n.ux-input-component [slot=\"trailing-icon\"],\n.ux-input-component__trailing:not(empty) {\n  margin-left: 8px;\n}\n\n/* MAIN INPUT AREA */\n.ux-input-component__content {\n  display: flex;\n  flex-direction: column;\n  width: 100%;\n}\n\n/* INPUT LABEL */\n.ux-input-component__label {\n  position: relative;\n  align-self: flex-start;\n  z-index: 1;\n  cursor: text;\n  font-size: inherit;\n  font-size: var(--font-size, 16px);\n  line-height: 1.6;\n  line-height: var(--line-height, 1.6);\n  letter-spacing: 0.5px;\n  letter-spacing: var(--label-letter-spacing, 0.5px);\n  color: #757575;\n  color: var(--foreground-label, #757575);\n  transition: all ease 150ms;\n  transform: translateY(var(--empty-label-translation, 13.6px));\n  padding: var(--label-v-padding, 6px) 0 0 0;\n}\n\n.ux-input-component__inner-input {\n  position: relative;\n  z-index: 2;\n  width: 100%;\n  box-sizing: border-box;\n  margin-bottom: -10px; /* trick to make the inner input not resizing the outer box when not in focused and without value */\n  line-height: 1.6;\n  line-height: var(--line-height, 1.6);\n  letter-spacing: inherit;\n  letter-spacing: var(--letter-spacing, inherit);\n  padding: 0 0 var(--inner-input-v-padding, 6px) 0;\n  border: 0;\n  color: inherit;\n  background-color: transparent;\n  outline: none;\n  font-weight: 400;\n}\n\n.ux-input-component__border {\n  height: var(---border-active-width, 2px);\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n}\n\n.ux-input-component__border:before {\n  display: block;\n  content: '';\n  height: 1px;\n  height: var(--border-width, 1px);\n  background-color: #757575;\n  background-color: var(--border-color, #757575);\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n}\n\n.ux-input-component__border:after {\n  display: block;\n  content: '';\n  height: var(--border-active-width, 2px);\n  background-color: #3F51B5;\n  background-color: var(--active-color, #3F51B5);\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  transform: scalex(0);\n  transition: transform ease 150ms;\n}\n\n.ux-input-component--focused .input_component__border-bottom:after {\n  transform: scaleX(1);\n}\n\n\n/* INPUT VARIANTS - IN DEFAULT STATE */\n.ux-input-component--filled {\n  border: 0px;\n  border-bottom-left-radius: 0;\n  border-bottom-right-radius: 0;\n}\n\n\n\n\n/* OTHER STATES (--focused, --has-value, --error, :hover)*/\n\n/* LABEL AND CONTENT IN FOCUSED, HAS-VALUE STATE */\n.ux-input-component--focused .ux-input-component__label,\n.ux-input-component--has-value .ux-input-component__label {\n  transform: translateY(0px);\n  font-size: 12px;\n  font-size: var(--label-font-size, 12px);\n  line-height: 1.6;\n  line-height: var(--label-line-height, 1.6);\n}\n\n\n/* BORDER BOTTOM IN FOCUS STATE  */\n.ux-input-component--focused .ux-input-component__border:after {\n  transform: scalex(1);\n}\n\n\n/* ERROR STATE */\n.ux-input-component--has-error:not(.ux-input-component--focused) .ux-input-component__label {\n  color: #F44336;\n  color: var(--error, #F44336);\n}\n.ux-input-component--has-error:not(.ux-input-component--focused) .ux-input-component__border:after {\n  background-color: #F44336;\n  background-color: var(--error, #F44336);\n  transform: scalex(1);\n}\n\n/* HOVER STATE */\n.ux-input-component--filled:hover:not(.ux-input-component--disabled):not([disabled]):not([readonly]) {\n  background-color: #00000027;\n  background-color: var(--background-hover, #00000027);\n}\n\n/* DISABLED STATE */\n.ux-input-component--filled.ux-input-component--disabled,\n.ux-input-component--filled[disabled],\n.ux-input-component--filled[readonly] {\n  color: #9E9E9E;\n  color: var(--disabled-foreground, #9E9E9E);\n  background-color: #e1e1e1;\n  background-color: var(--disabled-background, #9E9E9E);\n}\n.ux-input-component--filled.ux-input-component--disabled, .ux-input__label,\n.ux-input-component--filled[disabled] .ux-input__label,\n.ux-input-component--filled[readonly] .ux-input__label {\n  color: #9E9E9E;\n  color: var(--disabled-foreground, #9E9E9E);\n}\n\n/* PLACEHOLDER LABEL */\n.ux-input-component--placeholder {\n  --inner-input-v-padding: 12px;\n  --min-height: calc(\n    1 * var(--line-height, 1.6) * var(--font-size, 16px) +\n    2 * var(--inner-input-v-padding, 6px) + \n    2 * var(--border-width, 1px));\n}\n.ux-input-component--placeholder.ux-input-component--dense {\n  --inner-input-v-padding: 6px;\n}\n.ux-input-component--placeholder .ux-input-component__label {\n  position: absolute;\n  font-size: var(--font-size, 16px);\n  line-height: var(--line-height, 1.6);\n  transform: none;\n  padding: var(--inner-input-v-padding) 0;\n}\n.ux-input-component--placeholder.ux-input-component--focused .ux-input-component__label,\n.ux-input-component--placeholder.ux-input-component--has-value .ux-input-component__label {\n  transform: none;\n}\n.ux-input-component--placeholder.ux-input-component--filled.ux-input-component--has-value .ux-input-component__label {\n  opacity: 0;\n}\n.ux-input-component--placeholder .ux-input-component__inner-input {\n  padding: var(--inner-input-v-padding) 0;\n  font-size: var(--font-size, 16px);\n}\n", ""]);
+exports.push([module.i, "/* CUSTOMIZABLE VARIABLES */\n.ux-input-component {\n  --foreground: var(--aurelia-ux--design-control-foreground, #212121);\n  --foreground-label: var(--aurelia-ux--design-control-label-color, #757575);\n  --background: var(--aurelia-ux--design-control-background, #E0E0E0);\n  --background-hover: #00000027;\n  --active-color: var(--aurelia-ux--design-primary, #3F51B5);\n\n  --font-size: 16px;\n  --letter-spacing: inherit;\n  --label-font-size: 12px;\n  --label-letter-spacing: 0.5px;\n  --line-height: 1.6;\n  --label-line-height: 1.6;\n\n  --border-color: var(--aurelia-ux--design-control-label-color, #757575);\n  --border-radius: 4px;\n  --border-width: 1px;\n  --border-active-width: 2px;\n\n  --disabled-foreground: var(--aurelia-ux--design-disabled-foreground, #9E9E9E);\n  --disabled-background: var(--aurelia-ux--design-disabled-background, #e1e1e1);\n\n  --error: var(--aurelia-ux--design-error, #F44336);\n}\n\n/* CALCULATIONS */\n.ux-input-component {\n  --label-v-padding: 6px;\n  --inner-input-v-padding: 6px;\n  /* MIN HEIGHT OF OUTER COMPONENT */\n  --min-height: 58.8px;\n  --min-height: calc(\n    1 * var(--line-height, 1.6) * var(--font-size, 16px) +\n    1 * var(--label-line-height, 1.6) * var(--label-font-size, 12px) +\n    1 * var(--label-v-padding, 6px) + \n    1 * var(--inner-input-v-padding, 6px) + \n    2 * var(--border-width, 1px));\n  /* TRANSLATION OF LABEL WHEN INPUT IS EMPTY */\n  --half-h: 29.4px;\n  --half-h: calc(var(--min-height, 58.8px) / 2);\n  --abs-empty-label-pos: 13.6px;\n  --abs-empty-label-pos: calc(var(--half-h, 29.4px) - var(--font-size, 16px) * var(--line-height, 1.6) / 2 - var(--label-v-padding, 6px));\n  --empty-label-translation: 13.6px;\n  --empty-label-translation: calc(var(--abs-empty-label-pos, 13.6px));\n}\n.ux-input-component--dense.ux-input-component {\n  --label-v-padding: 2px;\n  --inner-input-v-padding: 2px;\n}\n\n/* OUTER DIV COMPONENT */\n.ux-input-component {\n  display: flex;\n  width: 100%;\n  min-height: 56px;\n  padding: 0 16px;\n  align-items: flex-start;\n  box-sizing: border-box;\n  position: relative;\n  color: #212121;\n  background-color: #E0E0E0;\n  border-radius: 4px;\n  color: var(--foreground, #E0E0E0);\n  background-color: var(--background, #212121);\n  border-radius: var(--border-radius, 4px);\n  min-height: var(--min-height, 58.8px);\n}\n\n\n/* LEADING AND TRAILING SLOTS */\n.ux-input-component [slot=\"leading-icon\"],\n.ux-input-component [slot=\"trailing-icon\"],\n.ux-input-component__leading,\n.ux-input-component__trailing {\n  flex-shrink: 0;\n  align-self: center;\n  display: inline-flex;\n  align-items: center;\n}\n.ux-input-component [slot=\"leading-icon\"],\n.ux-input-component__leading:not(empty) {\n  margin-right: 8px;\n}\n.ux-input-component [slot=\"trailing-icon\"],\n.ux-input-component__trailing:not(empty) {\n  margin-left: 8px;\n}\n\n/* MAIN INPUT AREA */\n.ux-input-component__content {\n  display: flex;\n  flex-direction: column;\n  width: 100%;\n}\n\n/* INPUT LABEL */\n.ux-input-component__label {\n  position: relative;\n  align-self: flex-start;\n  z-index: 1;\n  cursor: text;\n  font-size: inherit;\n  font-size: var(--font-size, 16px);\n  line-height: 1.6;\n  line-height: var(--line-height, 1.6);\n  letter-spacing: 0.5px;\n  letter-spacing: var(--label-letter-spacing, 0.5px);\n  color: #757575;\n  color: var(--foreground-label, #757575);\n  transition: all ease 150ms;\n  transform: translateY(var(--empty-label-translation, 13.6px));\n  padding: var(--label-v-padding, 6px) 0 0 0;\n}\n\n.ux-input-component__inner-input {\n  position: relative;\n  z-index: 2;\n  width: 100%;\n  box-sizing: border-box;\n  margin-bottom: -10px; /* trick to make the inner input not resizing the outer box when not in focused and without value */\n  line-height: 1.6;\n  line-height: var(--line-height, 1.6);\n  letter-spacing: inherit;\n  letter-spacing: var(--letter-spacing, inherit);\n  padding: 0 0 var(--inner-input-v-padding, 6px) 0;\n  border: 0;\n  color: inherit;\n  background-color: transparent;\n  outline: none;\n  font-weight: 400;\n}\n\n.ux-input-component__border {\n  height: var(---border-active-width, 2px);\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  pointer-events: none;\n}\n\n.ux-input-component__border:before {\n  display: block;\n  content: '';\n  height: 1px;\n  height: var(--border-width, 1px);\n  background-color: #757575;\n  background-color: var(--border-color, #757575);\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n}\n\n.ux-input-component__border:after {\n  display: block;\n  content: '';\n  height: var(--border-active-width, 2px);\n  background-color: #3F51B5;\n  background-color: var(--active-color, #3F51B5);\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  transform: scalex(0);\n  transition: transform ease 150ms;\n}\n\n.ux-input-component--focused .input_component__border-bottom:after {\n  transform: scaleX(1);\n}\n\n\n/* INPUT VARIANTS - IN DEFAULT STATE */\n.ux-input-component--filled {\n  border: 0px;\n  border-bottom-left-radius: 0;\n  border-bottom-right-radius: 0;\n}\n\n\n\n\n/* OTHER STATES (--focused, --has-value, --error, :hover)*/\n\n/* LABEL AND CONTENT IN FOCUSED, HAS-VALUE STATE */\n.ux-input-component--focused .ux-input-component__label,\n.ux-input-component--has-value .ux-input-component__label {\n  transform: translateY(0px);\n  font-size: 12px;\n  font-size: var(--label-font-size, 12px);\n  line-height: 1.6;\n  line-height: var(--label-line-height, 1.6);\n}\n\n\n/* BORDER BOTTOM IN FOCUS STATE  */\n.ux-input-component--focused .ux-input-component__border:after {\n  transform: scalex(1);\n}\n\n\n/* ERROR STATE */\n.ux-input-component--has-error:not(.ux-input-component--focused) .ux-input-component__label {\n  color: #F44336;\n  color: var(--error, #F44336);\n}\n.ux-input-component--has-error:not(.ux-input-component--focused) .ux-input-component__border:after {\n  background-color: #F44336;\n  background-color: var(--error, #F44336);\n  transform: scalex(1);\n}\n\n/* HOVER STATE */\n.ux-input-component--filled:hover:not(.ux-input-component--disabled):not([disabled]):not([readonly]) {\n  background-color: #00000027;\n  background-color: var(--background-hover, #00000027);\n}\n\n/* DISABLED STATE */\n.ux-input-component--filled.ux-input-component--disabled,\n.ux-input-component--filled[disabled],\n.ux-input-component--filled[readonly] {\n  color: #9E9E9E;\n  color: var(--disabled-foreground, #9E9E9E);\n  background-color: #e1e1e1;\n  background-color: var(--disabled-background, #9E9E9E);\n}\n.ux-input-component--filled.ux-input-component--disabled, .ux-input__label,\n.ux-input-component--filled[disabled] .ux-input__label,\n.ux-input-component--filled[readonly] .ux-input__label {\n  color: #9E9E9E;\n  color: var(--disabled-foreground, #9E9E9E);\n}\n\n/* PLACEHOLDER LABEL */\n.ux-input-component--placeholder {\n  --inner-input-v-padding: 12px;\n  --min-height: calc(\n    1 * var(--line-height, 1.6) * var(--font-size, 16px) +\n    2 * var(--inner-input-v-padding, 6px) + \n    2 * var(--border-width, 1px));\n}\n.ux-input-component--placeholder.ux-input-component--dense {\n  --inner-input-v-padding: 6px;\n}\n.ux-input-component--placeholder .ux-input-component__label {\n  position: absolute;\n  font-size: var(--font-size, 16px);\n  line-height: var(--line-height, 1.6);\n  transform: none;\n  padding: var(--inner-input-v-padding) 0;\n}\n.ux-input-component--placeholder.ux-input-component--focused .ux-input-component__label,\n.ux-input-component--placeholder.ux-input-component--has-value .ux-input-component__label {\n  transform: none;\n}\n.ux-input-component--placeholder.ux-input-component--filled.ux-input-component--has-value .ux-input-component__label {\n  opacity: 0;\n}\n.ux-input-component--placeholder .ux-input-component__inner-input {\n  padding: var(--inner-input-v-padding) 0;\n  font-size: var(--font-size, 16px);\n}\n", ""]);
 
 
 /***/ }),
@@ -44144,7 +44187,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 exports = module.exports = __webpack_require__(/*! ../../../app/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "ux-button {\n  display: inline-block;\n  position: relative;\n}\n\n.ux-button {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n  border: 0;\n  padding: 0 8px;\n  outline: none;\n  cursor: pointer;\n  text-align: center;\n  font-family: inherit;\n  font-family: var(--aurelia-ux--button-font-family, inherit);\n  font-weight: 600;\n  font-weight: var(--aurelia-ux--button-font-weight, 600);\n  text-transform: uppercase;\n  text-transform: var(--aurelia-ux--button-text-transform, uppercase);\n  letter-spacing: 0.5px;\n  letter-spacing: var(--aurelia-ux--button-letter-spacing, 0.5px);\n  flex-wrap: nowrap;\n  overflow: hidden;\n}\n\n/* Button Sizes */\n.ux-button--small {\n  font-size: 13px;\n  height: 32px;\n  line-height: 32px;\n}\n\n.ux-button--medium {\n  font-size: 14px;\n  height: 36px;\n  line-height: 36px;\n}\n\n.ux-button--large {\n  font-size: 16px;\n  height: 42px;\n  line-height: 42px;\n}\n\n/* Button Types, without colors */\n.ux-button--text,\n.ux-button--raised,\n.ux-button--flat,\n.ux-button--outline {\n  min-width: 88px;\n  padding: 0 16px;\n  border-radius: var(--aurelia-ux--button-border-radius, '2px');\n}\n.ux-button--raised {\n  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  transition-delay: 0.2s;\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n}\n.ux-button--outline {\n  background-color: transparent;\n}\n.ux-button--text {\n  background-color: transparent;\n}\n.ux-button--fab {\n  border-radius: 50%;\n  overflow: hidden;\n  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  transition-delay: 0.2s;\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n}\n\n/* Button Types Colors and variants */\n\n.ux-button--raised,\n.ux-button--flat,\n.ux-button--fab {\n  background-color: #3F51B5;\n  background-color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n  color: #fff;\n  color: var(--aurelia-ux--button-foreground, var(--aurelia-ux--design-primary-foreground, #fff));\n}\n.ux-button--outline {\n  border: 1px solid #3F51B5;\n  border-width: var(--aurelia-ux--button-border-width, 1px);\n  border-color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n  color: #3F51B5;\n  color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n}\n.ux-button--text {\n  color: #3F51B5;\n  color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n}\n\n.ux-button--accent > .ux-button--raised,\n.ux-button--accent > .ux-button--flat,\n.ux-button--accent > .ux-button--fab {\n  background-color: #FF4081;\n  background-color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--design-accent, #FF4081));\n  color: #fff;\n  color: var(--aurelia-ux--button-accent-foreground, var(--aurelia-ux--design-accent-foreground, #fff));\n}\n.ux-button--accent > .ux-button--outline {\n  border-color: #FF4081;\n  border-color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--accent-primary, #FF4081));\n  color: #FF4081;\n  color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--accent-primary, #FF4081));\n}\n.ux-button--accent > .ux-button--text {\n  color: #FF4081;\n  color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--accent-primary, #FF4081));\n}\n\n.ux-button--raised:disabled,\n.ux-button--flat:disabled,\n.ux-button--fab:disabled {\n  background-color: #9E9E9E;\n  background-color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--design-disabled-background, #9E9E9E));\n  color: #CFD8DC;\n  color: var(--aurelia-ux--button-disabled-foreground, var(--aurelia-ux--design-disabled-foreground, #CFD8DC));\n}\n.ux-button--outline:disabled {\n  border-color: #9E9E9E;\n  border-color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--disabled-primary, #9E9E9E));\n  color: #9E9E9E;\n  color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--disabled-primary, #9E9E9E));\n}\n.ux-button--text:disabled {\n  color: #9E9E9E;\n  color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--disabled-primary, #9E9E9E));\n}\n\n\n\n/* Button States */\n\n.ux-button::-moz-focus-inner {\n  border: none;\n}\n\n.ux-button--text:hover {\n  background-color: rgba(124, 124, 124, 0.25);\n}\n\n.ux-button--text:focus {\n  background-color: rgba(124, 124, 124, 0.30);\n}\n\n.ux-button--outline:focus {\n  border: 1px solid #3F51B5;\n  border: 1px solid var(--aurelia-ux--design-primary, #3F51B5);\n}\n\n.ux-button--flat:focus,\n.ux-button--raised:focus {\n  box-shadow: 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36);\n  box-shadow: var(--aurelia-ux--design-elevationFocus, 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36));\n  transition-delay: 0s;\n}\n\n.ux-button--raised:active {\n  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\n  box-shadow: var(--aurelia-ux--design-elevation4dp, 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2));\n  transition-delay: 0s;\n}\n\n.ux-button--fab:active {\n  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\n  box-shadow: var(--aurelia-ux--design-elevation4dp, 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2));\n  transition-delay: 0s;\n}\n\n.ux-button--fab:focus {\n  box-shadow: 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36);\n  box-shadow: var(--aurelia-ux--design-elevation-focus, 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36));\n  transition-delay: 0s;\n}\n\n.ux-button--raised:disabled:focus,\n.ux-button--fab:disabled:focus {\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n  transition-delay: 0s;\n}\n\n.ux-button--raised:disabled:active,\n.ux-button--fab:disabled:active {\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n  transition-delay: 0s;\n}\n\n\n\n.ux-button--text.ux-button--text-remove-padding {\n  min-width: auto;\n  padding: 0 8px;\n}\n\n.ux-fab-button {\n  height: auto;\n  width: auto;\n}\n\n/* Button Sizes */\n.ux-button--small .ux-button--fab {\n  width: 40px;\n  height: 40px;\n}\n\n.ux-button--medium .ux-button--fab {\n  width: 56px;\n  height: 56px;\n}\n\n.ux-button--large .ux-button--fab {\n  width: 64px;\n  height: 64px;\n}\n\n", ""]);
+exports.push([module.i, "ux-button {\n  display: inline-block;\n  position: relative;\n}\n\n.ux-button {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n  border: 0;\n  padding: 0 8px;\n  outline: none;\n  cursor: pointer;\n  text-align: center;\n  font-family: inherit;\n  font-family: var(--aurelia-ux--button-font-family, inherit);\n  font-weight: 600;\n  font-weight: var(--aurelia-ux--button-font-weight, 600);\n  text-transform: uppercase;\n  text-transform: var(--aurelia-ux--button-text-transform, uppercase);\n  letter-spacing: 0.5px;\n  letter-spacing: var(--aurelia-ux--button-letter-spacing, 0.5px);\n  flex-wrap: nowrap;\n  overflow: hidden;\n}\n\n/* Button Sizes */\n.ux-button--small {\n  font-size: 13px;\n  height: 32px;\n  line-height: 32px;\n}\n\n.ux-button--medium {\n  font-size: 14px;\n  height: 36px;\n  line-height: 36px;\n}\n\n.ux-button--large {\n  font-size: 16px;\n  height: 42px;\n  line-height: 42px;\n}\n\n/* Button Types, without colors */\n.ux-button--text,\n.ux-button--raised,\n.ux-button--flat,\n.ux-button--outline {\n  min-width: 88px;\n  padding: 0 16px;\n  border-radius: var(--aurelia-ux--button-border-radius, '2px');\n}\n.ux-button--raised {\n  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  transition-delay: 0.2s;\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n}\n.ux-button--outline {\n  background-color: transparent;\n}\n.ux-button--text {\n  background-color: transparent;\n}\n.ux-button--fab {\n  border-radius: 50%;\n  overflow: hidden;\n  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n  transition-delay: 0.2s;\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n}\n\n/* Button Types Colors and variants */\n\n.ux-button--raised,\n.ux-button--flat,\n.ux-button--fab {\n  background-color: #3F51B5;\n  background-color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n  color: #fff;\n  color: var(--aurelia-ux--button-foreground, var(--aurelia-ux--design-primary-foreground, #fff));\n}\n.ux-button--outline {\n  border: 1px solid #3F51B5;\n  border-width: var(--aurelia-ux--button-border-width, 1px);\n  border-color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n  color: #3F51B5;\n  color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n}\n.ux-button--text {\n  color: #3F51B5;\n  color: var(--aurelia-ux--button-background, var(--aurelia-ux--design-primary, #3F51B5));\n}\n\n.ux-button--accent > .ux-button--raised,\n.ux-button--accent > .ux-button--flat,\n.ux-button--accent > .ux-button--fab {\n  background-color: #FF4081;\n  background-color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--design-accent, #FF4081));\n  color: #fff;\n  color: var(--aurelia-ux--button-accent-foreground, var(--aurelia-ux--design-accent-foreground, #fff));\n}\n.ux-button--accent > .ux-button--outline {\n  border-color: #FF4081;\n  border-color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--accent-primary, #FF4081));\n  color: #FF4081;\n  color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--accent-primary, #FF4081));\n}\n.ux-button--accent > .ux-button--text {\n  color: #FF4081;\n  color: var(--aurelia-ux--button-accent-background, var(--aurelia-ux--accent-primary, #FF4081));\n}\n\n.ux-button--raised:disabled,\n.ux-button--flat:disabled,\n.ux-button--fab:disabled {\n  background-color: #9E9E9E;\n  background-color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--design-disabled-background, #9E9E9E));\n  color: #CFD8DC;\n  color: var(--aurelia-ux--button-disabled-foreground, var(--aurelia-ux--design-disabled-foreground, #CFD8DC));\n}\n.ux-button--outline:disabled {\n  border-color: #9E9E9E;\n  border-color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--disabled-primary, #9E9E9E));\n  color: #9E9E9E;\n  color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--disabled-primary, #9E9E9E));\n}\n.ux-button--text:disabled {\n  color: #9E9E9E;\n  color: var(--aurelia-ux--button-disabled-background, var(--aurelia-ux--disabled-primary, #9E9E9E));\n}\n.ux-button--disabled * {\n  pointer-events: none;\n}\n\n\n/* Button States */\n\n.ux-button::-moz-focus-inner {\n  border: none;\n}\n\n.ux-button--text:hover {\n  background-color: rgba(124, 124, 124, 0.25);\n}\n\n.ux-button--text:focus {\n  background-color: rgba(124, 124, 124, 0.30);\n}\n\n.ux-button--outline:focus {\n  border: 1px solid #3F51B5;\n  border: 1px solid var(--aurelia-ux--design-primary, #3F51B5);\n}\n\n.ux-button--flat:focus,\n.ux-button--raised:focus {\n  box-shadow: 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36);\n  box-shadow: var(--aurelia-ux--design-elevationFocus, 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36));\n  transition-delay: 0s;\n}\n\n.ux-button--raised:active {\n  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\n  box-shadow: var(--aurelia-ux--design-elevation4dp, 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2));\n  transition-delay: 0s;\n}\n\n.ux-button--fab:active {\n  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\n  box-shadow: var(--aurelia-ux--design-elevation4dp, 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2));\n  transition-delay: 0s;\n}\n\n.ux-button--fab:focus {\n  box-shadow: 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36);\n  box-shadow: var(--aurelia-ux--design-elevation-focus, 0 0 8px rgba(0, 0, 0, .18), 0 8px 16px rgba(0, 0, 0, .36));\n  transition-delay: 0s;\n}\n\n.ux-button--raised:disabled:focus,\n.ux-button--fab:disabled:focus {\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n  transition-delay: 0s;\n}\n\n.ux-button--raised:disabled:active,\n.ux-button--fab:disabled:active {\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  box-shadow: var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12));\n  transition-delay: 0s;\n}\n\n\n\n.ux-button--text.ux-button--text-remove-padding {\n  min-width: auto;\n  padding: 0 8px;\n}\n\n.ux-fab-button {\n  height: auto;\n  width: auto;\n}\n\n/* Button Sizes */\n.ux-button--small .ux-button--fab {\n  width: 40px;\n  height: 40px;\n}\n\n.ux-button--medium .ux-button--fab {\n  width: 56px;\n  height: 56px;\n}\n\n.ux-button--large .ux-button--fab {\n  width: 64px;\n  height: 64px;\n}\n\n", ""]);
 
 
 /***/ }),
@@ -46994,14 +47037,19 @@ module.exports = "<template>\n  <require from=\"./ux-icon.css\"></require>\n  <s
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-input-theme */ "../packages/input/src/ux-input-theme.ts"), __webpack_require__(/*! ./ux-input */ "@aurelia-ux/input/ux-input")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_framework_1, aurelia_binding_1, core_1, ux_input_theme_1, ux_input_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-default-input-configuration */ "../packages/input/src/ux-default-input-configuration.ts"), __webpack_require__(/*! ./ux-input-theme */ "../packages/input/src/ux-input-theme.ts"), __webpack_require__(/*! ./ux-input */ "@aurelia-ux/input/ux-input")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_framework_1, aurelia_binding_1, core_1, ux_default_input_configuration_1, ux_input_theme_1, ux_input_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.UxDefaultInputConfiguration = ux_default_input_configuration_1.UxDefaultInputConfiguration;
     exports.UxInputTheme = ux_input_theme_1.UxInputTheme;
     exports.UxInput = ux_input_1.UxInput;
-    function configure(config) {
+    function configure(config, callback) {
         config.container.get(core_1.AureliaUX).registerUxElementConfig(uxInputConfig);
         config.globalResources('./ux-input');
+        if (typeof callback === 'function') {
+            var defaults = config.container.get(ux_default_input_configuration_1.UxDefaultInputConfiguration);
+            callback(defaults);
+        }
     }
     exports.configure = configure;
     var uxInputConfig = {
@@ -47163,11 +47211,11 @@ module.exports = "<template class=\"ux-input-info\">\n  <require from=\"./ux-inp
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js"), __webpack_require__(/*! aurelia-templating */ "../node_modules/aurelia-templating/dist/es2015/aurelia-templating.js"), __webpack_require__(/*! aurelia-pal */ "../node_modules/aurelia-pal/dist/es2015/aurelia-pal.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! aurelia-dependency-injection */ "../node_modules/aurelia-dependency-injection/dist/es2015/aurelia-dependency-injection.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component.css */ "../packages/core/src/components/ux-input-component.css"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component--outline.css */ "../packages/core/src/components/ux-input-component--outline.css")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, tslib_1, aurelia_templating_1, aurelia_pal_1, aurelia_binding_1, aurelia_dependency_injection_1, core_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js"), __webpack_require__(/*! aurelia-templating */ "../node_modules/aurelia-templating/dist/es2015/aurelia-templating.js"), __webpack_require__(/*! aurelia-pal */ "../node_modules/aurelia-pal/dist/es2015/aurelia-pal.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! aurelia-dependency-injection */ "../node_modules/aurelia-dependency-injection/dist/es2015/aurelia-dependency-injection.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-default-input-configuration */ "../packages/input/src/ux-default-input-configuration.ts"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component.css */ "../packages/core/src/components/ux-input-component.css"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component--outline.css */ "../packages/core/src/components/ux-input-component--outline.css")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, tslib_1, aurelia_templating_1, aurelia_pal_1, aurelia_binding_1, aurelia_dependency_injection_1, core_1, ux_default_input_configuration_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var UxInput = /** @class */ (function () {
-        function UxInput(element, styleEngine) {
+        function UxInput(element, styleEngine, defaultConfiguration) {
             this.element = element;
             this.styleEngine = styleEngine;
             this.autofocus = null;
@@ -47178,6 +47226,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             this.rawValue = '';
             this.focused = false;
             defineUxInputElementApis(element);
+            if (defaultConfiguration.theme !== undefined) {
+                this.theme = defaultConfiguration.theme;
+            }
+            if (defaultConfiguration.dense !== undefined) {
+                this.dense = defaultConfiguration.dense;
+            }
+            if (defaultConfiguration.variant !== undefined) {
+                this.variant = defaultConfiguration.variant;
+            }
         }
         UxInput.prototype.bind = function () {
             var element = this.element;
@@ -47282,6 +47339,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         UxInput.prototype.typeChanged = function (newValue) {
             if (![
                 'text',
+                'date',
+                'time',
+                'datetime-local',
                 'password',
                 'number',
                 'email',
@@ -47373,7 +47433,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             aurelia_binding_1.computedFrom('label')
         ], UxInput.prototype, "placeholderMode", null);
         UxInput = tslib_1.__decorate([
-            aurelia_dependency_injection_1.inject(Element, core_1.StyleEngine),
+            aurelia_dependency_injection_1.inject(Element, core_1.StyleEngine, ux_default_input_configuration_1.UxDefaultInputConfiguration),
             aurelia_templating_1.customElement('ux-input'),
             aurelia_templating_1.useView('./ux-input.html')
         ], UxInput);
@@ -47436,7 +47496,7 @@ exports.push([module.i, ".ux-input {\n  --foreground: var(--aurelia-ux--input-fo
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<template role=\"textbox\"\n  class=\"ux-input-component ux-input-component--${variant} ${dense ? 'ux-input-component--dense' : ''} ${placeholderMode ? 'ux-input-component--placeholder' : ''} ux-input\"\n  disabled.bind=\"disabled & booleanAttr\"\n  readonly.bind=\"readonly & booleanAttr\"\n  aria-disabled.bind=\"disabled & booleanAttr\"\n  aria-readonly.bind=\"readonly & booleanAttr\"\n  click.trigger=\"focus()\">\n  <require from=\"./ux-input.css\"></require>\n\n  \n  <slot name=\"leading-icon\"></slot>\n\n  <span class=\"ux-input-component__content\">\n    <div class=\"ux-input-component__label-background\" if.bind=\"variant === 'outline' && (label || placeholder)\" css=\"width: ${labelEl.offsetWidth + 6}px;\"></div>\n    <div class=\"ux-input-component__label\" ref=\"labelEl\">${label || placeholder}</div>\n  \n    <input\n      ref=\"textbox\"\n      class=\"ux-input-component__inner-input\"\n      value.bind=\"rawValue\"\n      focus.bind=\"focused\"\n      disabled.bind=\"disabled & booleanAttr\"\n      readonly.bind=\"readonly & booleanAttr\"\n      required.bind=\"required & booleanAttr\">\n  </span>\n\n  <slot name=\"trailing-icon\"></slot>\n\n  <div class=\"ux-input-component__border\" show.bind=\"!(variant === 'filled' && disabled)\"></div>\n</template>\n";
+module.exports = "<template role=\"textbox\"\n  class=\"ux-input-component ux-input-component--${variant} ${dense ? 'ux-input-component--dense' : ''} ${placeholderMode ? 'ux-input-component--placeholder' : ''} ux-input\"\n  disabled.bind=\"disabled & booleanAttr\"\n  readonly.bind=\"readonly & booleanAttr\"\n  aria-disabled.bind=\"disabled & booleanAttr\"\n  aria-readonly.bind=\"readonly & booleanAttr\"\n  click.trigger=\"focus() || true\">\n  <require from=\"./ux-input.css\"></require>\n\n  <slot name=\"leading-icon\"></slot>\n\n  <span class=\"ux-input-component__content\">\n    <div class=\"ux-input-component__label-background\" if.bind=\"variant === 'outline' && (label || placeholder)\" css=\"width: ${labelEl.offsetWidth + 6}px;\"></div>\n    <div class=\"ux-input-component__label\" ref=\"labelEl\">${label || placeholder}</div>\n  \n    <input\n      ref=\"textbox\"\n      class=\"ux-input-component__inner-input\"\n      value.bind=\"rawValue\"\n      focus.bind=\"focused\"\n      disabled.bind=\"disabled & booleanAttr\"\n      readonly.bind=\"readonly & booleanAttr\"\n      required.bind=\"required & booleanAttr\">\n  </span>\n\n  <slot name=\"trailing-icon\"></slot>\n\n  <div class=\"ux-input-component__border\" show.bind=\"!(variant === 'filled' && disabled)\"></div>\n</template>\n";
 
 /***/ }),
 
@@ -47638,6 +47698,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             this.defaultConfiguration = defaultConfiguration;
             this.styleEngine = styleEngine;
             this.isOpen = false;
+            this.isWrapperOpen = false;
             this.focusedOption = undefined;
             this.searching = false;
             this.errorMessage = undefined;
@@ -47765,7 +47826,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     }
                     this.updateAnchor();
                     windowEvents.forEach(function (x) { return window.addEventListener(x, _this, true); });
-                    this.taskQueue.queueTask(function () { return _this.isOpen = true; });
+                    this.isWrapperOpen = true;
+                    this.isOpen = true;
                     return [2 /*return*/];
                 });
             });
@@ -47773,19 +47835,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         UxLookup.prototype.close = function () {
             var _this = this;
             this.isOpen = false;
+            var transitionDurationString = getComputedStyle(this.element).getPropertyValue('--aurelia-ux--lookup-transition-duration')
+                || ux_lookup_theme_1.UxLookupTheme.DEFAULT_TRANSITION_DURATION;
+            var transitionDuration = parseInt(transitionDurationString.replace('ms', ''));
+            setTimeout(function () { return _this.isWrapperOpen = false; }, transitionDuration);
             this.focusedOption = undefined;
             windowEvents.forEach(function (x) { return window.addEventListener(x, _this, true); });
         };
         UxLookup.prototype.updateAnchor = function () {
-            var _a, _b, _c;
             if (!this.inputElement) {
                 return;
             }
             var inputRect = this.inputElement.getBoundingClientRect();
             var style = getComputedStyle(this.element);
-            var inputDistance = parseInt((_a = style.getPropertyValue('--aurelia-ux--lookup-input-distance'), (_a !== null && _a !== void 0 ? _a : ux_lookup_theme_1.UxLookupTheme.DEFAULT_INPUT_DISTANCE.toString())));
-            var windowEdgeDistance = parseInt((_b = style.getPropertyValue('--aurelia-ux--lookup-window-edge-distance'), (_b !== null && _b !== void 0 ? _b : ux_lookup_theme_1.UxLookupTheme.DEFAULT_WINDOW_EDGE_DISTANCE.toString())));
-            var bottomHeightThreshold = parseInt((_c = style.getPropertyValue('--aurelia-ux--lookup-bottom-height-threshold'), (_c !== null && _c !== void 0 ? _c : ux_lookup_theme_1.UxLookupTheme.DEFAULT_BOTTOM_HEIGHT_THRESHOLD.toString())));
+            var inputDistanceString = style.getPropertyValue('--aurelia-ux--lookup-input-distance');
+            var inputDistance = parseInt(inputDistanceString ? inputDistanceString : ux_lookup_theme_1.UxLookupTheme.DEFAULT_INPUT_DISTANCE.toString());
+            var windowEdgeDistanceString = style.getPropertyValue('--aurelia-ux--lookup-window-edge-distance');
+            var windowEdgeDistance = parseInt(windowEdgeDistanceString ? windowEdgeDistanceString : ux_lookup_theme_1.UxLookupTheme.DEFAULT_WINDOW_EDGE_DISTANCE.toString());
+            var bottomHeightThresholdString = style.getPropertyValue('--aurelia-ux--lookup-bottom-height-threshold');
+            var bottomHeightThreshold = parseInt(bottomHeightThresholdString ? bottomHeightThresholdString : ux_lookup_theme_1.UxLookupTheme.DEFAULT_BOTTOM_HEIGHT_THRESHOLD.toString());
             var availableHeight = document.body.scrollTop + window.innerHeight - inputRect.bottom - inputDistance - windowEdgeDistance;
             if (availableHeight > bottomHeightThreshold) {
                 this.anchor = {
@@ -48039,7 +48107,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 exports = module.exports = __webpack_require__(/*! ../../../app/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "ux-lookup {\n  display: block;\n  position: fixed;\n  opacity: 0;\n  z-index: 9999;\n  -webkit-transform: scale(0.7, 0.7);\n          transform: scale(0.7, 0.7);\n  -webkit-transition: -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 125ms cubic-bezier(0.25, 0.8, 0.25, 1);\n  -webkit-transition-duration: var(--aurelia-ux--lookup-transition-duration, 125ms);\n          transition-duration: var(--aurelia-ux--lookup-transition-duration, 125ms);\n  overflow-y: auto;\n}\n\nux-lookup:focus {\n  outline: none;\n}\n\nux-lookup.ux-lookup--open {\n  opacity: 1;\n  background-color: #F5F5F5;\n  background-color: var(--aurelia-ux--lookup-background, var(--aurelia-ux--design-surface-background, #F5F5F5));\n  color: #212121;\n  color: var(--aurelia-ux--lookup-foreground, var(--aurelia-ux--design-surface-foreground, #212121));\n  -webkit-transform: scale(1, 1);\n          transform: scale(1, 1);\n  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  -webkit-box-shadow: var(--aurelia-ux--lookup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n          box-shadow: var(--aurelia-ux--lookup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n}\n\nux-lookup .ux-lookup__option {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  max-width: 100%;\n  height: 48px;\n  padding: 0 16px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  text-align: left;\n  cursor: pointer;\n}\n\nux-lookup .ux-lookup__option:hover {\n  background-color: var(--aurelia-ux--lookup-option-hover-background, rgba(0, 0, 0, 0.05));\n}\n\nux-lookup .ux-lookup__option.ux-lookup__option--focused {\n  background-color: var(--aurelia-ux--lookup-option-focused-background, rgba(0, 0, 0, 0.1));\n}", ""]);
+exports.push([module.i, "ux-lookup {\n  display: block;\n  position: fixed;\n  opacity: 0;\n  z-index: 9999;\n  -webkit-transform: scale(0.7, 0.7);\n          transform: scale(0.7, 0.7);\n  -webkit-transition: var(--aurelia-ux--lookup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: var(--aurelia-ux--lookup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1);\n  overflow-y: auto;\n  background-color: #F5F5F5;\n  background-color: var(--aurelia-ux--lookup-background, var(--aurelia-ux--design-surface-background, #F5F5F5));\n  color: #212121;\n  color: var(--aurelia-ux--lookup-foreground, var(--aurelia-ux--design-surface-foreground, #212121));\n  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  -webkit-box-shadow: var(--aurelia-ux--lookup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n          box-shadow: var(--aurelia-ux--lookup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n}\n\nux-lookup:focus {\n  outline: none;\n}\n\nux-lookup.ux-lookup--open {\n  opacity: 1;\n  -webkit-transform: scale(1, 1);\n          transform: scale(1, 1);\n}\n\nux-lookup .ux-lookup__option {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  max-width: 100%;\n  height: 48px;\n  padding: 0 16px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  text-align: left;\n  cursor: pointer;\n}\n\nux-lookup .ux-lookup__option:hover {\n  background-color: var(--aurelia-ux--lookup-option-hover-background, rgba(0, 0, 0, 0.05));\n}\n\nux-lookup .ux-lookup__option.ux-lookup__option--focused {\n  background-color: var(--aurelia-ux--lookup-option-focused-background, rgba(0, 0, 0, 0.1));\n}", ""]);
 
 
 /***/ }),
@@ -48051,7 +48119,7 @@ exports.push([module.i, "ux-lookup {\n  display: block;\n  position: fixed;\n  o
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<template class=\"ux-lookup--${isOpen ? 'open' : 'closed'}\"\n  css=\"top: ${anchor.top}; bottom: ${anchor.bottom}; left: ${anchor.left}px; max-height: ${anchor.maxHeight}px; width: ${anchor.width}px\"\n  tabindex=\"-1\">\n  <require from=\"./ux-lookup.css\"></require>\n\n  <div class=\"ux-lookup__option ux-lookup__option-searching\" if.bind=\"searching\">\n    <template replaceable part=\"searching\">\n      ${defaultConfiguration.searchingMessage}\n    </template>\n  </div>\n\n  <div class=\"ux-lookup__option ux-lookup__option-error\" if.bind=\"errorMessage\">\n    <template replaceable part=\"error\">\n      ${errorMessage}\n    </template>\n  </div>\n\n  <div class=\"ux-lookup__option ux-lookup__option-not-found\" if.bind=\"notFound\">\n    <template replaceable part=\"not-found\">\n      ${defaultConfiguration.notFoundMessage}\n    </template>\n  </div>\n\n  <div repeat.for=\"option of optionsArray\"\n    class=\"ux-lookup__option ${option===focusedOption ? 'ux-lookup__option--focused' : ''}\"\n    mousedown.delegate=\"select(option)\">\n    <template replaceable part=\"option\">\n      ${getDisplay(option)}\n    </template>\n  </div>\n</template>\n";
+module.exports = "<template class=\"ux-lookup--${isOpen ? 'open' : 'closed'} ux-lookup\"\n  css=\"top: ${anchor.top}; bottom: ${anchor.bottom}; left: ${anchor.left}px; max-height: ${anchor.maxHeight}px; width: ${anchor.width}px\"\n  tabindex=\"-1\">\n  <require from=\"./ux-lookup.css\"></require>\n\n  <div show.bind=\"isWrapperOpen\">\n    <div class=\"ux-lookup__option ux-lookup__option-searching\" if.bind=\"searching\">\n      <template replaceable part=\"searching\">\n        ${defaultConfiguration.searchingMessage}\n      </template>\n    </div>\n\n    <div class=\"ux-lookup__option ux-lookup__option-error\" if.bind=\"errorMessage\">\n      <template replaceable part=\"error\">\n        ${errorMessage}\n      </template>\n    </div>\n\n    <div class=\"ux-lookup__option ux-lookup__option-not-found\" if.bind=\"notFound\">\n      <template replaceable part=\"not-found\">\n        ${defaultConfiguration.notFoundMessage}\n      </template>\n    </div>\n\n    <div repeat.for=\"option of optionsArray\"\n      class=\"ux-lookup__option ${option===focusedOption ? 'ux-lookup__option--focused' : ''}\"\n      mousedown.delegate=\"select(option)\">\n      <template replaceable part=\"option\">\n        ${getDisplay(option)}\n      </template>\n    </div>\n  </div>\n</template>\n";
 
 /***/ }),
 
@@ -48523,7 +48591,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 exports = module.exports = __webpack_require__(/*! ../../../app/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".ux-modal__overlay {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 0;\n  background: var(--aurelia-ux--modal-overlay-color, #333333);\n  transition: all ease 250ms;\n  transition-duration: var(--aurelia-ux--modal-overlay-transition-duration, var(--aurelia-ux--modal-transition-duration, 250ms))\n}\n\n.ux-modal__content {\n  transition: all ease 250ms;\n  transition-duration: var(--aurelia-ux--modal-content-transition-duration, var(--aurelia-ux--modal-transition-duration, 250ms));\n  max-height: 100%;\n}\n\n.ux-modal--opened .ux-modal__overlay {\n  opacity: var(--aurelia-ux--modal-overlay-opacity, 0.3);\n}\n\n.ux-modal__content-wrapper {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  pointer-events: none;\n}\n.ux-modal--lock .ux-modal__content-wrapper {\n  pointer-events: auto;\n}\n\n.ux-modal--unlocked .ux-modal__content {\n  box-shadow: var(--aurelia-ux--modal-unlocked-elevation, var(--aurelia-ux--design-elevation4dp));\n}\n\n.ux-modal__content {\n  pointer-events: auto;\n  background: var(--aurelia-ux--modal-background, var(--aurelia-ux--design-surface-background));\n  color: var(--aurelia-ux--modal-foreground, var(--aurelia-ux--design-surface-foreground));\n  -webkit-overflow-scrolling: touch;\n  overflow-y: auto;\n}\n\n/* MOBILE */\n.ux-modal--mobile .ux-modal__content {\n  width: 100%;\n  height: 100%;\n  max-width: none;\n  min-width: none;\n}\n\n/* DESKTOP */\n.ux-modal--desktop.ux-modal--center .ux-modal__content,\n.ux-modal--desktop.ux-modal--left .ux-modal__content,\n.ux-modal--desktop.ux-modal--right .ux-modal__content {\n  min-width: var(--aurelia-ux--modal-min-width, 320px);\n}\n.ux-modal--desktop.ux-modal--center .ux-modal__content {\n  border-radius: var(--aurelia-ux--modal-border-radius, 5px);\n}\n\n/* BOTTOM */\n.ux-modal--bottom .ux-modal__content {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  transform: translateY(100%);\n}\n.ux-modal--bottom.ux-modal--opened .ux-modal__content {\n  transform: translateY(0);\n}\n\n/* TOP */\n.ux-modal--top .ux-modal__content {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  transform: translateY(-100%);\n}\n.ux-modal--top.ux-modal--opened .ux-modal__content {\n  transform: translateY(0);\n}\n\n/* LEFT */\n.ux-modal--left .ux-modal__content {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  top: 0;\n  transform: translateX(-100%);\n}\n.ux-modal--left.ux-modal--opened .ux-modal__content {\n  transform: translateX(0);\n}\n\n/* RIGHT */\n.ux-modal--right .ux-modal__content {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  top: 0;\n  transform: translateX(100%);\n}\n.ux-modal--right.ux-modal--opened .ux-modal__content {\n  transform: translateX(0);\n}\n\n/* CENTER */\n.ux-modal--center .ux-modal__content {\n  opacity: 0;\n}\n.ux-modal--center.ux-modal--opened .ux-modal__content {\n  opacity: 1;\n}\n\n/* ABSOLUTE */\n.ux-modal--absolute .ux-modal__content {\n  position: absolute;\n  opacity: 0;\n  transition-property: opacity;\n}\n.ux-modal--absolute.ux-modal--opened .ux-modal__content {\n  opacity: 1;\n}\n\n/* CARD AS DIALOG */\n\n.ux-modal__content > .ux-card,\n.ux-modal__content > compose > .ux-card {\n  height: 100%;\n  margin: 0;\n}\n\n.ux-modal__content > .ux-card > *,\n.ux-modal__content > compose > .ux-card > * {\n  flex-shrink: 0;\n}\n\n.ux-modal__content > .ux-card > .ux-card__content,\n.ux-modal__content > compose > .ux-card > .ux-card__content {\n  display: block;\n  flex-shrink: 1;\n  height: 100%;\n  overflow: auto;\n}\n\n.ux-modal__content > .ux-card > .ux-card__footer,\n.ux-modal__content > compose > .ux-card > .ux-card__footer {\n  justify-content: flex-end;\n}\n\n.ux-modal--mobile .ux-modal__content > .ux-card > .ux-card__header, \n.ux-modal--mobile .ux-modal__content > compose > .ux-card > .ux-card__header {\n  margin-top: constant(safe-area-inset-top, 20px);\n  margin-top: env(safe-area-inset-top, 20px);\n}\n\n.ux-modal--mobile .ux-modal__content > .ux-card > .ux-card__footer,\n.ux-modal--mobile .ux-modal__content > compose > .ux-card > .ux-card__footer {\n  margin-bottom: constant(safe-area-inset-bottom, 20px);\n  margin-bottom: env(safe-area-inset-bottom, 20px);\n}\n", ""]);
+exports.push([module.i, ".ux-modal__overlay {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 0;\n  background: var(--aurelia-ux--modal-overlay-color, #333333);\n  transition: all ease 250ms;\n  transition-duration: var(--aurelia-ux--modal-overlay-transition-duration, var(--aurelia-ux--modal-transition-duration, 250ms))\n}\n\n.ux-modal__content {\n  transition: all ease 250ms;\n  transition-duration: var(--aurelia-ux--modal-content-transition-duration, var(--aurelia-ux--modal-transition-duration, 250ms));\n  max-height: 100%;\n}\n\n.ux-modal--opened .ux-modal__overlay {\n  opacity: var(--aurelia-ux--modal-overlay-opacity, 0.3);\n}\n\n.ux-modal__content-wrapper {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  pointer-events: none;\n}\n.ux-modal--lock .ux-modal__content-wrapper {\n  pointer-events: auto;\n}\n\n.ux-modal--unlocked .ux-modal__content {\n  box-shadow: var(--aurelia-ux--modal-unlocked-elevation, var(--aurelia-ux--design-elevation4dp));\n}\n\n.ux-modal__content {\n  pointer-events: auto;\n  background: var(--aurelia-ux--modal-background, var(--aurelia-ux--design-surface-background));\n  color: var(--aurelia-ux--modal-foreground, var(--aurelia-ux--design-surface-foreground));\n  -webkit-overflow-scrolling: touch;\n  overflow-y: auto;\n}\n\n/* MOBILE */\n.ux-modal--mobile .ux-modal__content {\n  width: 100%;\n  height: 100%;\n  max-width: none;\n  min-width: none;\n}\n\n/* DESKTOP */\n.ux-modal--desktop.ux-modal--center .ux-modal__content,\n.ux-modal--desktop.ux-modal--left .ux-modal__content,\n.ux-modal--desktop.ux-modal--right .ux-modal__content {\n  min-width: var(--aurelia-ux--modal-min-width, 320px);\n}\n.ux-modal--desktop.ux-modal--center .ux-modal__content {\n  border-radius: var(--aurelia-ux--modal-border-radius, 5px);\n}\n\n/* BOTTOM */\n.ux-modal--bottom .ux-modal__content {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  transform: translateY(100%);\n}\n.ux-modal--bottom.ux-modal--opened .ux-modal__content {\n  transform: translateY(0);\n}\n\n/* TOP */\n.ux-modal--top .ux-modal__content {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  transform: translateY(-100%);\n}\n.ux-modal--top.ux-modal--opened .ux-modal__content {\n  transform: translateY(0);\n}\n\n/* LEFT */\n.ux-modal--left .ux-modal__content {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  top: 0;\n  transform: translateX(-100%);\n}\n.ux-modal--left.ux-modal--opened .ux-modal__content {\n  transform: translateX(0);\n}\n\n/* RIGHT */\n.ux-modal--right .ux-modal__content {\n  position: absolute;\n  bottom: 0;\n  right: 0;\n  top: 0;\n  transform: translateX(100%);\n}\n.ux-modal--right.ux-modal--opened .ux-modal__content {\n  transform: translateX(0);\n}\n\n/* CENTER */\n.ux-modal--center .ux-modal__content {\n  opacity: 0;\n}\n.ux-modal--center.ux-modal--opened .ux-modal__content {\n  opacity: 1;\n}\n\n/* ABSOLUTE */\n.ux-modal--absolute .ux-modal__content {\n  position: absolute;\n  opacity: 0;\n  transition-property: opacity;\n}\n.ux-modal--absolute.ux-modal--opened .ux-modal__content {\n  opacity: 1;\n}\n\n/* CARD AS DIALOG */\n\n.ux-modal__content > .ux-card,\n.ux-modal__content > compose > .ux-card {\n  height: 100%;\n  margin: 0;\n}\n\n.ux-modal__content > .ux-card > *,\n.ux-modal__content > compose > .ux-card > * {\n  flex-shrink: 0;\n}\n\n.ux-modal__content > .ux-card > .ux-card__content,\n.ux-modal__content > compose > .ux-card > .ux-card__content {\n  display: block;\n  flex-shrink: 1;\n  height: 100%;\n  overflow: auto;\n}\n\n.ux-modal__content > .ux-card > .ux-card__footer,\n.ux-modal__content > compose > .ux-card > .ux-card__footer {\n  justify-content: flex-end;\n}\n\n.ux-modal--desktop .ux-modal__content > .ux-card,\n.ux-modal--desktop > compose > .ux-modal__content > .ux-card {\n  max-height: 90vh;\n  position: relative;\n}\n\n.ux-modal--mobile .ux-modal__content > .ux-card > .ux-card__header, \n.ux-modal--mobile .ux-modal__content > compose > .ux-card > .ux-card__header {\n  margin-top: constant(safe-area-inset-top, 20px);\n  margin-top: env(safe-area-inset-top, 20px);\n}\n\n.ux-modal--mobile .ux-modal__content > .ux-card > .ux-card__footer,\n.ux-modal--mobile .ux-modal__content > compose > .ux-card > .ux-card__footer {\n  margin-bottom: constant(safe-area-inset-bottom, 20px);\n  margin-bottom: env(safe-area-inset-bottom, 20px);\n}\n", ""]);
 
 
 /***/ }),
@@ -48961,20 +49029,25 @@ module.exports = "<template class=\"ux-radio ${effect !== null ? effect : ''}\">
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-option */ "@aurelia-ux/select/ux-option"), __webpack_require__(/*! ./ux-optgroup */ "@aurelia-ux/select/ux-optgroup"), __webpack_require__(/*! ./ux-select */ "@aurelia-ux/select/ux-select"), __webpack_require__(/*! ./ux-select-theme */ "../packages/select/src/ux-select-theme.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_framework_1, aurelia_binding_1, core_1, ux_option_1, ux_optgroup_1, ux_select_1, ux_select_theme_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! aurelia-binding */ "../node_modules/aurelia-binding/dist/es2015/aurelia-binding.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-default-select-configuration */ "../packages/select/src/ux-default-select-configuration.ts"), __webpack_require__(/*! ./ux-option */ "@aurelia-ux/select/ux-option"), __webpack_require__(/*! ./ux-optgroup */ "@aurelia-ux/select/ux-optgroup"), __webpack_require__(/*! ./ux-select */ "@aurelia-ux/select/ux-select"), __webpack_require__(/*! ./ux-select-theme */ "../packages/select/src/ux-select-theme.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_framework_1, aurelia_binding_1, core_1, ux_default_select_configuration_1, ux_option_1, ux_optgroup_1, ux_select_1, ux_select_theme_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.UxDefaultSelectConfiguration = ux_default_select_configuration_1.UxDefaultSelectConfiguration;
     exports.UxOption = ux_option_1.UxOption;
     exports.UxOptGroup = ux_optgroup_1.UxOptGroup;
     exports.UxSelect = ux_select_1.UxSelect;
     exports.UxSelectTheme = ux_select_theme_1.UxSelectTheme;
-    function configure(config) {
+    function configure(config, callback) {
         config.container.get(core_1.AureliaUX).registerUxElementConfig(uxSelectConfig);
         config.globalResources([
             './ux-select',
             './ux-optgroup',
             './ux-option'
         ]);
+        if (typeof callback === 'function') {
+            var defaults = config.container.get(ux_default_select_configuration_1.UxDefaultSelectConfiguration);
+            callback(defaults);
+        }
     }
     exports.configure = configure;
     var uxSelectConfig = {
@@ -49358,7 +49431,7 @@ module.exports = "<template\n  class=\"ux-option ripple ${selected ? 'ux-option-
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js"), __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! aurelia-logging */ "../node_modules/aurelia-logging/dist/es2015/aurelia-logging.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./util */ "../packages/select/src/util.ts"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component.css */ "../packages/core/src/components/ux-input-component.css"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component--outline.css */ "../packages/core/src/components/ux-input-component--outline.css")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, tslib_1, aurelia_framework_1, aurelia_logging_1, core_1, util_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js"), __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! @aurelia-ux/positioning */ "@aurelia-ux/positioning"), __webpack_require__(/*! aurelia-logging */ "../node_modules/aurelia-logging/dist/es2015/aurelia-logging.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-select-theme */ "../packages/select/src/ux-select-theme.ts"), __webpack_require__(/*! ./util */ "../packages/select/src/util.ts"), __webpack_require__(/*! ./ux-default-select-configuration */ "../packages/select/src/ux-default-select-configuration.ts"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component.css */ "../packages/core/src/components/ux-input-component.css"), __webpack_require__(/*! @aurelia-ux/core/components/ux-input-component--outline.css */ "../packages/core/src/components/ux-input-component--outline.css")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, tslib_1, aurelia_framework_1, positioning_1, aurelia_logging_1, core_1, ux_select_theme_1, util_1, ux_default_select_configuration_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var UP = 38;
@@ -49372,17 +49445,27 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     var invalidMultipleValueMsg = 'Only null or Array instances can be bound to a multi-select';
     var selectArrayContext = 'context:ux-select';
     var UxSelect = /** @class */ (function () {
-        function UxSelect(element, styleEngine, observerLocator, taskQueue) {
+        function UxSelect(element, styleEngine, observerLocator, taskQueue, defaultConfiguration, positioningFactory) {
             this.element = element;
             this.styleEngine = styleEngine;
             this.observerLocator = observerLocator;
             this.taskQueue = taskQueue;
+            this.positioningFactory = positioningFactory;
             this.selectedOption = null;
             this.variant = 'filled';
             this.dense = false;
             this.ignoreSelectEvent = true;
             // Only chrome persist the element prototype when cloning with clone node
-            Object.setPrototypeOf(element, UxSelectElementProto);
+            defineUxSelectElementApis(element);
+            if (defaultConfiguration.theme !== undefined) {
+                this.theme = defaultConfiguration.theme;
+            }
+            if (defaultConfiguration.dense !== undefined) {
+                this.dense = defaultConfiguration.dense;
+            }
+            if (defaultConfiguration.variant !== undefined) {
+                this.variant = defaultConfiguration.variant;
+            }
         }
         UxSelect.prototype.bind = function () {
             if (util_1.bool(this.autofocus)) {
@@ -49400,12 +49483,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             if (!this.winEvents) {
                 this.winEvents = new aurelia_framework_1.ElementEvents(window);
             }
+            this.themeChanged(this.theme);
             // Initially Synchronize options with value of this element
             this.taskQueue.queueMicroTask(this);
         };
         UxSelect.prototype.attached = function () {
             this.resolveDisplayValue();
             this.variantChanged(this.variant);
+            this.positioning = this.positioningFactory(this.element, this.optionWrapperEl, {
+                placement: 'bottom-start',
+                constraintElement: window,
+                offsetY: 0,
+            });
         };
         UxSelect.prototype.unbind = function () {
             this.winEvents.disposeAll();
@@ -49511,7 +49600,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         };
         UxSelect.prototype.setupListAnchor = function () {
             var _this = this;
-            this.calcAnchorPosition();
+            if (this.positioning) {
+                this.positioning.update();
+            }
             this.winEvents.subscribe('wheel', function (e) {
                 if (_this.expanded) {
                     if (e.target === aurelia_framework_1.PLATFORM.global || !_this.optionWrapperEl.contains(e.target)) {
@@ -49521,13 +49612,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }, true);
         };
         UxSelect.prototype.unsetupListAnchor = function () {
-            this.listAnchor = null;
             this.winEvents.disposeAll();
-        };
-        UxSelect.prototype.calcAnchorPosition = function () {
-            var elDim = this.element.getBoundingClientRect();
-            var offsetY = (48 - elDim.height) / 2;
-            this.listAnchor = { x: elDim.left, y: elDim.top - offsetY };
         };
         UxSelect.prototype.onKeyboardSelect = function () {
             if (!this.expanded) {
@@ -49600,13 +49685,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
             this.isCollapsing = true;
             this.optionCtEl.classList.remove('ux-select__list-container--open');
+            var listTransitionString = getComputedStyle(this.element).getPropertyValue('--aurelia-ux--select-list-transition')
+                || ux_select_theme_1.UxSelectTheme.DEFAULT_LIST_TRANSITION;
+            var listTransition = parseInt(listTransitionString.replace('ms', ''));
             setTimeout(function () {
-                _this.optionWrapperEl.classList.remove('ux-select__list-wrapper--open');
+                var _a;
+                (_a = _this.optionWrapperEl) === null || _a === void 0 ? void 0 : _a.classList.remove('ux-select__list-wrapper--open');
                 _this.isCollapsing = false;
                 _this.expanded = false;
                 _this.setFocusedOption(null);
                 _this.unsetupListAnchor();
-            }, this.theme && this.theme.listTransition || 125);
+            }, listTransition);
         };
         UxSelect.prototype.setFocusedOption = function (focusedOption) {
             var oldFocusedOption = this.focusedUxOption;
@@ -49837,7 +49926,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             aurelia_framework_1.computedFrom('disabled')
         ], UxSelect.prototype, "isDisabled", null);
         UxSelect = tslib_1.__decorate([
-            aurelia_framework_1.inject(Element, core_1.StyleEngine, aurelia_framework_1.ObserverLocator, aurelia_framework_1.TaskQueue),
+            aurelia_framework_1.inject(Element, core_1.StyleEngine, aurelia_framework_1.ObserverLocator, aurelia_framework_1.TaskQueue, ux_default_select_configuration_1.UxDefaultSelectConfiguration, aurelia_framework_1.Factory.of(positioning_1.UxPositioning)),
             aurelia_framework_1.processContent(ensureUxOptionOrUxOptGroup),
             aurelia_framework_1.customElement('ux-select'),
             aurelia_framework_1.useView('./ux-select.html')
@@ -49866,21 +49955,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         }
         return true;
     }
-    var UxSelectElementProto = Object.create(HTMLElement.prototype, {
-        value: {
-            get: function () {
-                return util_1.getAuViewModel(this).getValue();
+    var defineUxSelectElementApis = function (element) {
+        Object.defineProperties(element, {
+            value: {
+                get: function () {
+                    return util_1.getAuViewModel(this).getValue();
+                },
+                set: function (v) {
+                    util_1.getAuViewModel(this).setValue(v);
+                },
+                configurable: true
             },
-            set: function (v) {
-                return util_1.getAuViewModel(this).setValue(v);
+            options: {
+                get: function () {
+                    return util_1.getAuViewModel(this).getOptions();
+                },
+                configurable: true
             }
-        },
-        options: {
-            get: function () {
-                return util_1.getAuViewModel(this).getOptions();
-            }
-        }
-    });
+        });
+    };
     function defaultMatcher(a, b) {
         return a === b;
     }
@@ -49911,7 +50004,7 @@ exports.push([module.i, ".ux-select {\n  --foreground: var(--aurelia-ux--select-
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<template\n  class=\"ux-input-component ux-input-component--${variant} ${dense ? 'ux-input-component--dense' : ''} ${placeholderMode ? 'ux-input-component--placeholder' : ''} ux-select ${multiple ? 'ux-select--multiple' : ''} ${expanded ? 'ux-input-component--focused':''}\"\n  tabindex=\"0\"\n  disabled.bind=\"disabled & booleanAttr\"\n  readonly.bind=\"readonly & booleanAttr\"\n  aria-disabled.bind=\"disabled & booleanAttr\"\n  aria-readonly.bind=\"readonly & booleanAttr\"\n  aria-multiselectable.bind=\"multiple\"\n  keydown.trigger=\"onKeyDown($event)\"\n  blur.trigger=\"onBlur() & debounce:1\"\n  click.trigger=\"onTriggerClick()\">\n  <require from=\"@aurelia-ux/core/effects/paper-ripple.css\"></require>\n  <require from=\"./ux-select.css\"></require>\n\n  <slot name=\"leading-icon\"></slot>\n\n  <span class=\"ux-input-component__content\">\n    <div class=\"ux-input-component__label-background\" if.bind=\"variant === 'outline' && (label || placeholder)\" css=\"width: ${labelEl.offsetWidth + 6}px;\"></div>\n    <div class=\"ux-input-component__label\" ref=\"labelEl\">${label || placeholder}</div>\n  \n    <div class=\"ux-input-component__inner-input ux-select__value\">${displayValue}</div>\n  </span>\n\n  <span class=\"ux-input-component__trailing\">\n    <div class=\"ux-select__arrow\"></div>\n  </span>\n\n  <div class=\"ux-input-component__border\" show.bind=\"!(variant === 'filled' && disabled)\"></div>\n  \n  <div ref=\"optionWrapperEl\"\n    class=\"ux-select__list-wrapper\"\n    css=\"top: ${listAnchor.y}px; left: ${listAnchor.x}px;\">\n    <div ref=\"optionCtEl\"\n      class=\"ux-select__list-container\"\n      select.trigger=\"onSelect($event)\"\n      css=\"\n        max-width: ${theme.listMaxWidth}px;\n        max-height: ${theme.listMaxHeight}\"><slot></slot></div>\n  </div>\n</template>\n";
+module.exports = "<template\n  class=\"ux-input-component ux-input-component--${variant} ${dense ? 'ux-input-component--dense' : ''} ${placeholderMode ? 'ux-input-component--placeholder' : ''} ux-select ${multiple ? 'ux-select--multiple' : ''} ${expanded ? 'ux-input-component--focused':''}\"\n  tabindex=\"0\"\n  disabled.bind=\"disabled & booleanAttr\"\n  readonly.bind=\"readonly & booleanAttr\"\n  aria-disabled.bind=\"disabled & booleanAttr\"\n  aria-readonly.bind=\"readonly & booleanAttr\"\n  aria-multiselectable.bind=\"multiple\"\n  keydown.trigger=\"onKeyDown($event)\"\n  blur.trigger=\"onBlur() & debounce:1\"\n  click.trigger=\"onTriggerClick()\">\n  <require from=\"@aurelia-ux/core/effects/paper-ripple.css\"></require>\n  <require from=\"./ux-select.css\"></require>\n\n  <slot name=\"leading-icon\"></slot>\n\n  <span class=\"ux-input-component__content\">\n    <div class=\"ux-input-component__label-background\" if.bind=\"variant === 'outline' && (label || placeholder)\" css=\"width: ${labelEl.offsetWidth + 6}px;\"></div>\n    <div class=\"ux-input-component__label\" ref=\"labelEl\">${label || placeholder}</div>\n  \n    <div class=\"ux-input-component__inner-input ux-select__value\">${displayValue}</div>\n  </span>\n\n  <span class=\"ux-input-component__trailing\">\n    <div class=\"ux-select__arrow\"></div>\n  </span>\n\n  <div class=\"ux-input-component__border\" show.bind=\"!(variant === 'filled' && disabled)\"></div>\n  \n  <div ref=\"optionWrapperEl\"\n    class=\"ux-select__list-wrapper\">\n    <div ref=\"optionCtEl\"\n      class=\"ux-select__list-container\"\n      select.trigger=\"onSelect($event)\"\n      css=\"\n        max-width: ${theme.listMaxWidth}px;\n        max-height: ${theme.listMaxHeight}\"><slot></slot></div>\n  </div>\n</template>\n";
 
 /***/ }),
 
@@ -51108,33 +51201,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     var templateLookup = {};
     var getNextNodeTemplateId = function () { return ++id; };
     var UxTreeView = /** @class */ (function () {
-        function UxTreeView(element, container, styleEngine, defaultConfiguration) {
-            var _a;
+        function UxTreeView(element, taskQueue, styleEngine, defaultConfiguration, container) {
             this.element = element;
+            this.taskQueue = taskQueue;
             this.styleEngine = styleEngine;
-            this.defaultConfiguration = defaultConfiguration;
             // this is populated by the HTML template
             this.treeViews = [];
-            if (this.defaultConfiguration.theme) {
-                this.theme = this.defaultConfiguration.theme;
+            if (defaultConfiguration.theme) {
+                this.theme = defaultConfiguration.theme;
             }
-            var parent = (_a = container.parent) === null || _a === void 0 ? void 0 : _a.get(aurelia_framework_1.Optional.of(UxTreeView_1));
-            var isRoot = !parent;
-            if (isRoot) {
-                var nodeTemplateId = this.element.getAttribute('data-template-id');
-                if (nodeTemplateId && templateLookup[nodeTemplateId]) {
-                    var nodeTemplate = templateLookup[nodeTemplateId];
-                    var nodeViewFactory = container.get(aurelia_framework_1.ViewCompiler).compile("<template>" + nodeTemplate + "</template>", container.get(aurelia_framework_1.ViewResources));
-                    this.nodeViewFactory = nodeViewFactory;
-                }
-                else {
-                    // create a default <tree-node/> factory
-                    this.nodeViewFactory = container.get(aurelia_framework_1.ViewCompiler).compile('<template>${$node}</template>', container.get(aurelia_framework_1.ViewResources));
-                }
-            }
-            else {
-                this.nodeViewFactory = parent.nodeViewFactory;
-            }
+            this.nodeViewFactory = UxTreeView_1.getNodeFactory(element, container);
         }
         UxTreeView_1 = UxTreeView;
         UxTreeView.processContent = function (_viewCompiler, _resources, element, _instruction) {
@@ -51146,6 +51222,33 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
             element.innerHTML = '';
             return false;
+        };
+        /**
+         * @param element the host element of a <ux-tree-view/>
+         * @param container the container associated with a <ux-tree-view/>
+         */
+        UxTreeView.getNodeFactory = function (element, container) {
+            var parent = container.parent ? container.parent.get(aurelia_framework_1.Optional.of(UxTreeView_1)) : null;
+            var isRoot = !parent;
+            // a root ux-tree view means a consumer defined one
+            // this potentiall contains the template for the tree node
+            if (isRoot) {
+                var nodeTemplateId = element.getAttribute('data-template-id');
+                if (nodeTemplateId && templateLookup[nodeTemplateId]) {
+                    var nodeTemplate = templateLookup[nodeTemplateId];
+                    var nodeViewFactory = container.get(aurelia_framework_1.ViewCompiler).compile("<template>" + nodeTemplate + "</template>", container.get(aurelia_framework_1.ViewResources));
+                    return nodeViewFactory;
+                }
+                else {
+                    // create a default <ux-tree-node/> factory
+                    return container.get(aurelia_framework_1.ViewCompiler).compile('<template>${$node}</template>', container.get(aurelia_framework_1.ViewResources));
+                }
+            }
+            else {
+                // if it's not a root <ux-tree-view/>
+                // assume that the parent has already built the node factory and simply get it from there
+                return parent.nodeViewFactory;
+            }
         };
         UxTreeView.prototype.themeChanged = function (newValue) {
             if (newValue !== null && !newValue.themeKey) {
@@ -51173,21 +51276,46 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
             this.selectedNode = n;
         };
-        UxTreeView.prototype.find = function (predicate) {
-            for (var i = 0; i < this.nodes.length; ++i) {
-                if (predicate(this.nodes[i])) {
-                    return this.nodes[i];
+        UxTreeView.prototype.findPath = function (nodes, predicate) {
+            var path = [];
+            for (var i = 0; i < nodes.length; ++i) {
+                if (predicate(nodes[i])) {
+                    return [i];
                 }
-                if (!this.nodes[i].children) {
+                if (!nodes[i].children) {
                     continue;
                 }
-                var n = this.treeViews[i].find(predicate);
-                if (n) {
-                    this.nodes[i].expanded = true;
-                    return n;
+                var childPath = this.findPath(nodes[i].children, predicate);
+                if (childPath.length) {
+                    return tslib_1.__spreadArrays([i], childPath);
                 }
             }
-            return undefined;
+            return path;
+        };
+        UxTreeView.prototype.expandPath = function (path) {
+            var _this = this;
+            if (path.length === 1) {
+                this.nodeClicked(this.nodes[path[0]]);
+                this.element.querySelectorAll('.ux-tree-view--node')[path[0]].scrollIntoView();
+            }
+            else {
+                this.nodes[path[0]].expanded = true;
+                // let Aurelia populate treeViews by queueing the task
+                // todo: flatten the data source via a data normalization step first
+                // as this technique requires many round of queueTask if the node selected is deep
+                this.taskQueue.queueTask(function () {
+                    _this.treeViews[path[0]].expandPath(path.slice(1));
+                });
+            }
+        };
+        UxTreeView.prototype.find = function (predicate) {
+            // to avoid rendering the whole tree finding a node is a 2-step process
+            // firstly, find the path - nodes which need to be expanded to display the target node
+            var path = this.findPath(this.nodes, predicate);
+            if (path.length) {
+                // secondly, expand the path
+                this.expandPath(path);
+            }
         };
         UxTreeView.prototype.dispatchEvent = function (type, node) {
             this.element.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { node: node } }));
@@ -51201,7 +51329,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             aurelia_framework_1.bindable
         ], UxTreeView.prototype, "theme", void 0);
         UxTreeView = UxTreeView_1 = tslib_1.__decorate([
-            aurelia_framework_1.inject(Element, aurelia_framework_1.Container, core_1.StyleEngine, ux_default_tree_view_configuration_1.UxDefaultTreeViewConfiguration),
+            aurelia_framework_1.inject(Element, aurelia_framework_1.TaskQueue, core_1.StyleEngine, ux_default_tree_view_configuration_1.UxDefaultTreeViewConfiguration, aurelia_framework_1.Container),
             aurelia_framework_1.customElement('ux-tree-view'),
             aurelia_framework_1.useView('./ux-tree-view.html'),
             aurelia_framework_1.processContent(UxTreeView_1.processContent)
@@ -51236,7 +51364,7 @@ exports.push([module.i, "ux-tree-view {\n  display: block;\n}\n\nux-tree-view .u
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<template class=\"ux-tree-view\">\n  <require from=\"./ux-tree-view.css\"></require>\n  <require from=\"../ux-tree-node/ux-tree-node\"></require>\n  <ul class=\"ux-tree-view--list\">\n    <li repeat.for=\"$node of nodes\" class=\"ux-tree-view--list-item\">\n      <let $tree.bind=\"element\"></let>\n      <let $tree-vm.bind=\"$parent\"></let>\n      <div class=\"ux-tree-view--node ${$node.selected ? 'ux-tree-view--node-selected' : ''}\" click.trigger=\"nodeClicked($node)\">\n        <ux-button if.bind=\"$node.children\" type=\"fab\" size=\"small\" class=\"ux-tree-view--expander\"\n          click.trigger=\"toggleExpanded($node, $event)\">\n          <ux-icon icon.bind=\"$node.expanded ? 'expand_more' : 'chevron_right'\"></ux-icon>\n        </ux-button>\n        <div else class=\"ux-tree-view--leaf-padding\"></div>\n        <ux-tree-node factory.bind=\"nodeViewFactory\"></ux-tree-node>\n      </div>\n      <!-- show.bind is necessary to enable node search -->\n      <!-- elements hidden with if.bind would not populate treeViews array -->\n      <ux-tree-view show.bind=\"$node.children && $node.expanded\" nodes.bind=\"$node.children\"\n        node-selected.trigger=\"childNodeSelected($event.detail.node)\" view-model.ref=\"treeViews[$index]\"></tree-view>\n    </li>\n  </ul>\n  <slot></slot>\n</template>\n";
+module.exports = "<template class=\"ux-tree-view\">\n  <require from=\"./ux-tree-view.css\"></require>\n  <require from=\"../ux-tree-node/ux-tree-node\"></require>\n  <ul class=\"ux-tree-view--list\">\n    <li repeat.for=\"$node of nodes\" class=\"ux-tree-view--list-item\">\n      <let $tree.bind=\"element\"></let>\n      <let $tree-vm.bind=\"$parent\"></let>\n      <div class=\"ux-tree-view--node ${$node.selected ? 'ux-tree-view--node-selected' : ''}\" click.trigger=\"nodeClicked($node)\">\n        <ux-button if.bind=\"$node.children\" type=\"fab\" size=\"small\" class=\"ux-tree-view--expander\"\n          click.trigger=\"toggleExpanded($node, $event)\">\n          <ux-icon icon.bind=\"$node.expanded ? 'expand_more' : 'chevron_right'\"></ux-icon>\n        </ux-button>\n        <div else class=\"ux-tree-view--leaf-padding\"></div>\n        <ux-tree-node factory.bind=\"nodeViewFactory\"></ux-tree-node>\n      </div>\n      <!-- show.bind is necessary to enable node search -->\n      <!-- elements hidden with if.bind would not populate treeViews array -->\n      <ux-tree-view if.bind=\"$node.children && $node.expanded\" nodes.bind=\"$node.children\"\n        node-selected.trigger=\"childNodeSelected($event.detail.node)\" view-model.ref=\"treeViews[$index]\"></tree-view>\n    </li>\n  </ul>\n  <slot></slot>\n</template>\n";
 
 /***/ }),
 
@@ -57484,4 +57612,4 @@ module.exports = "<template>\n  <require from=\"./theming.css\"></require>\n  <r
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.90f34322451e76d8beaf.bundle.map
+//# sourceMappingURL=app.940b9ae9483e53ad751c.bundle.map
