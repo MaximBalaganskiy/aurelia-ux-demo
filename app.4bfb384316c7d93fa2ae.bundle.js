@@ -19284,6 +19284,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         StyleEngine.prototype.getDefaultTheme = function (key) {
             return this.styleController.themes[key];
         };
+        /**
+         * Retrieves the computed CSS variable value for the given element and key.
+         *
+         * @param element
+         * @param key Key of the theme
+         * @param variableName Name of the theme variable to retrieve
+         * @param defaultValue Default value
+         */
+        StyleEngine.prototype.getVariableValue = function (element, key, variableName, defaultValue) {
+            return getComputedStyle(element).getPropertyValue("--aurelia-ux--" + key + "-" + variableName) || defaultValue || '';
+        };
         StyleEngine = tslib_1.__decorate([
             aurelia_dependency_injection_1.inject(style_controller_1.StyleController)
         ], StyleEngine);
@@ -20569,6 +20580,38 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         return UxModalTheme;
     }());
     exports.UxModalTheme = UxModalTheme;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
+/***/ "../packages/popup/src/ux-popup-theme.ts":
+/*!***********************************************!*\
+  !*** ../packages/popup/src/ux-popup-theme.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var UxPopupTheme = /** @class */ (function () {
+        function UxPopupTheme() {
+            this.themeKey = 'dropdown';
+            this.transitionDuration = UxPopupTheme.DEFAULT_TRANSITION_DURATION;
+            this.background = '#F5F5F5';
+            this.foreground = '#212121';
+            this.elevation = '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)';
+            this.triggerDistance = UxPopupTheme.DEFAULT_TRIGGER_DISTANCE;
+            this.windowEdgeDistance = UxPopupTheme.DEFAULT_WINDOW_EDGE_DISTANCE;
+        }
+        UxPopupTheme.DEFAULT_TRIGGER_DISTANCE = 3;
+        UxPopupTheme.DEFAULT_WINDOW_EDGE_DISTANCE = 15;
+        UxPopupTheme.DEFAULT_TRANSITION_DURATION = '125ms';
+        return UxPopupTheme;
+    }());
+    exports.UxPopupTheme = UxPopupTheme;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -43484,10 +43527,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var errorClasses = {
-        'ux-input': 'ux-input--has-error',
-        'ux-datepicker': 'ux-datepicker--has-error',
-        'ux-select': 'ux-select--has-error',
-        'ux-textarea': 'ux-textarea--has-error'
+        'ux-input': 'ux-input--has-error ux-input-component--has-error',
+        'ux-datepicker': 'ux-datepicker--has-error ux-input-component--has-error',
+        'ux-select': 'ux-select--has-error ux-input-component--has-error',
+        'ux-textarea': 'ux-textarea--has-error ux-input-component--has-error'
     };
     var AureliaUXFormRenderer = /** @class */ (function () {
         function AureliaUXFormRenderer() {
@@ -43509,12 +43552,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
         };
         AureliaUXFormRenderer.prototype.add = function (element, result) {
+            var _a;
             if (result.valid) {
                 return;
             }
             for (var tag in errorClasses) {
                 if (element.classList.contains(tag)) {
-                    element.classList.add(errorClasses[tag]);
+                    (_a = element.classList).add.apply(_a, errorClasses[tag].split(' '));
                 }
             }
             var uxField = element.closest('ux-field');
@@ -43533,12 +43577,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             inputInfoHintText.insertBefore(message, inputInfoHintText.firstChild);
         };
         AureliaUXFormRenderer.prototype.remove = function (element, result) {
+            var _a;
             if (result.valid) {
                 return;
             }
             for (var tag in errorClasses) {
                 if (element.classList.contains(tag)) {
-                    element.classList.remove(errorClasses[tag]);
+                    (_a = element.classList).remove.apply(_a, errorClasses[tag].split(' '));
                 }
             }
             var uxField = element.closest('ux-field');
@@ -43628,6 +43673,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                             config.position = 'top';
                             config.overlayDismiss = true;
                         })
+                            .plugin('@aurelia-ux/popup')
                             .plugin('@aurelia-ux/positioning', function (config) {
                             config.offsetX = 10;
                             config.offsetY = 10;
@@ -48604,6 +48650,225 @@ exports.push([module.i, ".ux-modal__overlay {\n  position: absolute;\n  top: 0;\
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = "<template \n  class=\"ux-modal ux-modal--${viewportType} ux-modal--${position} ${showed ? 'ux-modal--opened':''} ux-modal--${lock ? 'lock':'unlocked'}\">\n  <require from=\"./ux-modal.css\"></require>\n  <div class=\"ux-modal__overlay\" ref=\"overlayElement\" if.bind=\"lock\">\n  </div>\n  <div \n    role=\"${role || 'dialog'}\"\n    aria-labelledby=\"ariaLabelledBy\"\n    aria-describedby=\"ariaDescribedBy\"\n    class=\"ux-modal__content-wrapper\" \n    ref=\"contentWrapperElement\" \n    click.delegate=\"overlayClick($event)\">\n    <div class=\"ux-modal__content\" ref=\"contentElement\">\n      <slot></slot>\n    </div>\n  </div>\n</template>\n";
+
+/***/ }),
+
+/***/ "@aurelia-ux/popup":
+/*!**************************************!*\
+  !*** ../packages/popup/src/index.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! ./ux-popup */ "@aurelia-ux/popup/ux-popup"), __webpack_require__(/*! ./ux-popup-theme */ "../packages/popup/src/ux-popup-theme.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, aurelia_framework_1, ux_popup_1, ux_popup_theme_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.UxPopup = ux_popup_1.UxPopup;
+    exports.UxPopupTheme = ux_popup_theme_1.UxPopupTheme;
+    function configure(frameworkConfig) {
+        frameworkConfig.globalResources([
+            './ux-popup'
+        ]);
+    }
+    exports.configure = configure;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
+/***/ "@aurelia-ux/popup/ux-popup":
+/*!*****************************************!*\
+  !*** ../packages/popup/src/ux-popup.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js"), __webpack_require__(/*! aurelia-framework */ "../node_modules/aurelia-framework/dist/es2015/aurelia-framework.js"), __webpack_require__(/*! @aurelia-ux/core */ "@aurelia-ux/core"), __webpack_require__(/*! ./ux-popup-theme */ "../packages/popup/src/ux-popup-theme.ts")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, tslib_1, aurelia_framework_1, core_1, ux_popup_theme_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var windowEvents = ['click', 'wheel', 'scroll', 'resize'];
+    var UxPopup = /** @class */ (function () {
+        function UxPopup(element, styleEngine, taskQueue) {
+            this.element = element;
+            this.styleEngine = styleEngine;
+            this.taskQueue = taskQueue;
+            this.isWrapperOpen = false;
+            this.isOpen = false;
+            this.isMeasured = false;
+            this.autoclose = true;
+        }
+        UxPopup.prototype.triggerChanged = function (newValue, oldValue) {
+            var _a, _b;
+            (_a = oldValue) === null || _a === void 0 ? void 0 : _a.removeEventListener('click', this);
+            (_b = newValue) === null || _b === void 0 ? void 0 : _b.addEventListener('click', this);
+        };
+        UxPopup.prototype.themeChanged = function (newValue) {
+            if (newValue && newValue.themeKey === null) {
+                newValue.themeKey = 'popup';
+            }
+            this.styleEngine.applyTheme(newValue, this.element);
+        };
+        UxPopup.prototype.detached = function () {
+            var _a;
+            (_a = this.trigger) === null || _a === void 0 ? void 0 : _a.removeEventListener('click', this);
+        };
+        UxPopup.prototype.handleEvent = function (evt) {
+            switch (evt.currentTarget) {
+                case this.trigger:
+                    switch (evt.type) {
+                        case 'click':
+                            this.triggerClick();
+                            break;
+                    }
+                    break;
+                case window:
+                    switch (evt.type) {
+                        case 'scroll':
+                        case 'wheel':
+                            this.onWindowWheel(evt);
+                            break;
+                        case 'resize':
+                            this.onWindowResize();
+                            break;
+                        case 'click':
+                            this.onWindowClick(evt);
+                            break;
+                    }
+                    break;
+            }
+        };
+        UxPopup.prototype.triggerClick = function () {
+            var _this = this;
+            if (this.isOpen) {
+                this.close();
+                return;
+            }
+            this.isMeasured = true;
+            this.taskQueue.queueTask(function () {
+                _this.isMeasured = false;
+                _this.updateAnchor();
+                windowEvents.forEach(function (x) { return window.addEventListener(x, _this, true); });
+                _this.isWrapperOpen = true;
+                _this.isOpen = true;
+            });
+        };
+        UxPopup.prototype.close = function () {
+            var _this = this;
+            this.isOpen = false;
+            var transitionDurationString = this.styleEngine.getVariableValue(this.element, 'popup', 'transition-duration', ux_popup_theme_1.UxPopupTheme.DEFAULT_TRANSITION_DURATION);
+            var transitionDuration = parseInt(transitionDurationString);
+            setTimeout(function () { return _this.isWrapperOpen = false; }, transitionDuration);
+            windowEvents.forEach(function (x) { return window.addEventListener(x, _this, true); });
+        };
+        UxPopup.prototype.updateAnchor = function () {
+            if (!this.trigger) {
+                return;
+            }
+            var rect = this.trigger.getBoundingClientRect();
+            // by the time updateAnchor is called the dimensions will be known because isMeasured flag sets a class
+            var popupRect = this.element.getBoundingClientRect();
+            var triggerDistanceString = this.styleEngine.getVariableValue(this.element, 'popup', 'trigger-distance', ux_popup_theme_1.UxPopupTheme.DEFAULT_TRIGGER_DISTANCE.toString());
+            var triggerDistance = parseInt(triggerDistanceString);
+            var windowEdgeDistanceString = this.styleEngine.getVariableValue(this.element, 'popup', 'window-edge-distance', ux_popup_theme_1.UxPopupTheme.DEFAULT_WINDOW_EDGE_DISTANCE.toString());
+            var windowEdgeDistance = parseInt(windowEdgeDistanceString);
+            var anchor = { left: undefined, right: undefined, top: undefined, bottom: undefined, maxHeight: undefined, maxWidth: undefined };
+            var availableSpaceBottom = document.body.scrollTop + window.innerHeight - rect.bottom - triggerDistance - windowEdgeDistance;
+            var availableSpaceTop = rect.top - document.body.scrollTop - triggerDistance - windowEdgeDistance;
+            if (availableSpaceBottom > popupRect.height || availableSpaceBottom > availableSpaceTop) {
+                anchor.top = rect.top + rect.height + triggerDistance + "px";
+                anchor.maxHeight = availableSpaceBottom;
+            }
+            else {
+                anchor.bottom = window.innerHeight - rect.top + triggerDistance + "px";
+                anchor.maxHeight = availableSpaceTop;
+            }
+            var availableSpaceRight = document.body.scrollLeft + window.innerWidth - rect.left - triggerDistance - windowEdgeDistance;
+            var availableSpaceLeft = rect.left - document.body.scrollLeft - triggerDistance - windowEdgeDistance;
+            if (availableSpaceRight > popupRect.width || availableSpaceRight > availableSpaceLeft) {
+                anchor.left = rect.left + "px";
+                anchor.maxWidth = availableSpaceRight;
+            }
+            else {
+                anchor.right = window.innerWidth - rect.right + "px";
+                anchor.maxWidth = availableSpaceLeft;
+            }
+            this.anchor = anchor;
+        };
+        UxPopup.prototype.onWindowWheel = function (evt) {
+            if (this.isOpen) {
+                if (evt.target === aurelia_framework_1.PLATFORM.global || !this.element.contains(evt.target)) {
+                    this.close();
+                }
+            }
+        };
+        UxPopup.prototype.onWindowResize = function () {
+            if (this.isOpen) {
+                this.updateAnchor();
+            }
+        };
+        UxPopup.prototype.onWindowClick = function (evt) {
+            if (!this.isOpen || !core_1.normalizeBooleanAttribute('autoclose', this.autoclose)) {
+                return;
+            }
+            var triggerClicked = false;
+            var parent = evt.target;
+            while (parent) {
+                if (parent === this.trigger) {
+                    triggerClicked = true;
+                    break;
+                }
+                parent = parent.parentElement;
+            }
+            if (!triggerClicked) {
+                this.close();
+            }
+        };
+        tslib_1.__decorate([
+            aurelia_framework_1.bindable
+        ], UxPopup.prototype, "trigger", void 0);
+        tslib_1.__decorate([
+            aurelia_framework_1.bindable
+        ], UxPopup.prototype, "theme", void 0);
+        tslib_1.__decorate([
+            aurelia_framework_1.bindable
+        ], UxPopup.prototype, "autoclose", void 0);
+        UxPopup = tslib_1.__decorate([
+            aurelia_framework_1.inject(Element, core_1.StyleEngine, aurelia_framework_1.TaskQueue),
+            aurelia_framework_1.customElement('ux-popup'),
+            aurelia_framework_1.useView('./ux-popup.html')
+        ], UxPopup);
+        return UxPopup;
+    }());
+    exports.UxPopup = UxPopup;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
+/***/ "@aurelia-ux/popup/ux-popup.css":
+/*!******************************************!*\
+  !*** ../packages/popup/src/ux-popup.css ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../app/node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".ux-popup {\n  display: block;\n  position: fixed;\n  opacity: 0;\n  z-index: 9999;\n  -webkit-transform: scale(0.7, 0.7);\n          transform: scale(0.7, 0.7);\n  -webkit-transition: opacity var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: opacity var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1), opacity var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1);\n  transition: transform var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1), opacity var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform var(--aurelia-ux--popup-transition-duration, 125ms) cubic-bezier(0.25, 0.8, 0.25, 1);\n  overflow-y: auto;\n  background-color: #F5F5F5;\n  background-color: var(--aurelia-ux--popup-background, var(--aurelia-ux--design-surface-background, #F5F5F5));\n  color: #212121;\n  color: var(--aurelia-ux--popup-foreground, var(--aurelia-ux--design-surface-foreground, #212121));\n  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  -webkit-box-shadow: var(--aurelia-ux--popup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n          box-shadow: var(--aurelia-ux--popup-elevation, var(--aurelia-ux--design-elevation2dp, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)));\n}\n\n.ux-popup:focus {\n  outline: none;\n}\n\n.ux-popup.ux-popup--open {\n  opacity: 1;\n  -webkit-transform: scale(1, 1);\n          transform: scale(1, 1);\n}\n\n.ux-popup.ux-popup--measured {\n  opacity: 0;\n  -webkit-transform: scale(1, 1);\n          transform: scale(1, 1);\n  -webkit-transition: none;\n  transition: none;\n}\n\n.ux-popup .ux-popup__option {\n  position: relative;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  max-width: 100%;\n  height: 48px;\n  padding: 0 16px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  text-align: left;\n  cursor: pointer;\n}\n\n.ux-popup .ux-popup__option:hover {\n  background-color: var(--aurelia-ux--lookup-option-hover-background, rgba(0, 0, 0, 0.05));\n}\n\n.ux-popup .ux-popup__option.ux-popup__option--focused {\n  background-color: var(--aurelia-ux--lookup-option-focused-background, rgba(0, 0, 0, 0.1));\n}", ""]);
+
+
+/***/ }),
+
+/***/ "@aurelia-ux/popup/ux-popup.html":
+/*!*******************************************!*\
+  !*** ../packages/popup/src/ux-popup.html ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = "<template class=\"ux-popup ux-popup--${isOpen ? 'open' : 'closed'} ${isMeasured ? 'ux-popup--measured' : ''}\"\n  css=\"top: ${anchor.top}; bottom: ${anchor.bottom}; left: ${anchor.left}; right: ${anchor.right}; max-height: ${isMeasured ? 9999 : anchor.maxHeight}px; max-width: ${isMeasured ? 9999 : anchor.maxWidth}px;\"\n  tabindex=\"-1\">\n  <require from=\"./ux-popup.css\"></require>\n  <div show.bind=\"isWrapperOpen || isMeasured\">\n    <slot></slot>\n  </div>\n</template>\n";
 
 /***/ }),
 
@@ -56860,7 +57125,7 @@ exports.push([module.i, ".components ux-sidenav {\n  border: 1px solid black;\n 
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<template>\n  <require from=\"./theming.css\"></require>\n  <require from='./json-converter'></require>\n  <require from=\"./components.css\"></require>\n\n  <section>\n    <h1>Components</h1>\n    <p>Demo of each component and diverse styles and types</p>\n  </section>\n\n  <section>\n    <h2>Buttons</h2>\n\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"4\">\n        <h4>Primary (default)</h4>\n        <p><ux-button type=\"raised\">Raised</ux-button></p>\n        <p><ux-button type=\"flat\">Flat</ux-button></p>\n        <p><ux-button type=\"text\">Text</ux-button></p>\n        <p><ux-button type=\"outline\">Outline</ux-button></p>\n        <p><ux-button type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"4\">\n        <h4>Accent (.ux-button--accent)</h4>\n        <p><ux-button class=\"ux-button--accent\" type=\"raised\">Raised</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"flat\">Flat</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"text\">Text</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"outline\">Outline</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"4\">\n        <h4>Disabled (disabled)</h4>\n        <p><ux-button disabled type=\"raised\">Raised</ux-button></p>\n        <p><ux-button disabled type=\"flat\">Flat</ux-button></p>\n        <p><ux-button disabled type=\"text\">Text</ux-button></p>\n        <p><ux-button disabled type=\"outline\">Outline</ux-button></p>\n        <p><ux-button disabled type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Input & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Default</h4>\n        <p><ux-input placeholder=\"With placeholder\"></ux-input></p>\n        <p>\n          <ux-input label=\"With floating label\" maxlength.bind=\"50\"></ux-input>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-input class=\"ux-input-component--has-error\" label=\"With error\">\n            <ux-icon icon=\"error\" slot=\"trailing-icon\"></ux-icon>\n          </ux-input>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Icons</h4>\n        <p><ux-input label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input></p>\n        <p><ux-input label=\"With trailing icon\"><ux-icon icon=\"remove_red_eye\" slot=\"trailing-icon\"></ux-icon></ux-input></p>\n        <h4>Outline</h4>\n        <p>\n          <ux-input variant=\"outline\" label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-input variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-input>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Textarea & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Filled</h4>\n        <p><ux-textarea placeholder=\"With placeholder\"></ux-textarea></p>\n        <p><ux-textarea label=\"With floating label\" auto-resize></ux-textarea></p>\n        <p><ux-textarea class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea></p>\n        <p><ux-textarea auto-resize label=\"Auto Resize\"></ux-textarea></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p><ux-textarea variant=\"outline\" label=\"Default\"></ux-textarea></p>\n        <p><ux-textarea variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea></p>\n        <p><ux-textarea variant=\"outline\" auto-resize label=\"Auto Resize\"></ux-textarea></p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Select & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Filled</h4>\n        <p>\n          <ux-select placeholder=\"Choose an option\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select label=\"With floating label\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p>\n          <ux-select variant=\"outline\" placeholder=\"Choose an option\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select label=\"With floating label\" variant=\"outline\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\" variant=\"outline\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Datepicker & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Default</h4>\n        <p><ux-datepicker placeholder=\"With placeholder\"></ux-datepicker></p>\n        <p>\n          <ux-datepicker label=\"With floating label\"></ux-datepicker>\n          <ux-input-info>And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker label=\"With icon\">\n            <ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon>\n          </ux-datepicker>\n          <ux-input-info>And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p>\n          <ux-datepicker variant=\"outline\" label=\"Outline datepicker\"></ux-datepicker>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Slider</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Slider (default)</h4>\n        <p><ux-slider min=\"0\" max=\"100\"></ux-slider></p>\n        <h4>With icons</h4>\n        <p>\n          <ux-slider min=\"0\" max=\"100\">\n            <ux-icon icon=\"volume_down\" slot=\"leading-icon\"></ux-icon>\n            <ux-icon icon=\"volume_up\" slot=\"trailing-icon\"></ux-icon>\n          </ux-slider>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>With value</h4>\n        <p>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderRValue\" theme.bind=\"{background: 'red'}\">\n            <span slot=\"leading-icon\">R</span>\n            <span slot=\"trailing-icon\">${sliderRValue}</span>\n          </ux-slider>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderGValue\" theme.bind=\"{background: 'green'}\">\n            <span slot=\"leading-icon\">G</span>\n            <span slot=\"trailing-icon\">${sliderGValue}</span>\n          </ux-slider>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderBValue\" theme.bind=\"{background: 'blue'}\">\n            <span slot=\"leading-icon\">B</span>\n            <span slot=\"trailing-icon\">${sliderBValue}</span>\n          </ux-slider>\n        </p>\n        <p style=\"text-align: center;\" css=\"color: rgb(${sliderRValue}, ${sliderGValue}, ${sliderBValue})\">Look at my beautiful color !</p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Selection Controls: checkbox and radio</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Checkbox</h4>\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'sport'\"></ux-checkbox>\n            <label>Sport</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'technology'\"></ux-checkbox>\n            <label>Technology</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'business'\"></ux-checkbox>\n            <label>Business</label>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Radio</h4>\n        <ux-field>\n          <label>Age Group</label>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'0-20'\"></ux-radio>\n            <label>0-20</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'20-40'\"></ux-radio>\n            <label>20-40</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'40+'\"></ux-radio>\n            <label>40+</label>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Selection Controls: chips and lists</h2>\n    <h4>Chips</h4>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <ux-chip-list ux-choice-container.bind=\"interests\">\n            <ux-chip ux-choice=\"sport\">Sport</ux-chip>\n            <ux-chip ux-choice=\"technology\">Technology</ux-chip>\n            <ux-chip ux-choice=\"business\">Business</ux-chip>\n          </ux-chip-list>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <ux-chip-list ux-choice-container.bind=\"ageGroup\">\n            <ux-chip ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-chip>\n            <ux-chip ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-chip>\n            <ux-chip ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-chip>\n          </ux-chip-list>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n\n    <h4>List</h4>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"interests2\">\n              <ux-list-item ux-choice=\"sport\">\n                <div class=\"ux-list-item__content\">Sport</div>\n              </ux-list-item>\n              <ux-list-item ux-choice=\"technology\">\n                <div class=\"ux-list-item__content\">Technology</div>\n              </ux-list-item>\n              <ux-list-item ux-choice=\"business\">\n                <div class=\"ux-list-item__content\">Business</div>\n              </ux-list-item>\n            </ux-list>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"ageGroup2\">\n              <ux-list-item ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-list-item>\n              <ux-list-item ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-list-item>\n              <ux-list-item ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-list-item>\n            </ux-list>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section class=\"components\">\n    <h2>Sidenav</h2>\n    <ux-sidenav>\n      <ux-sidenav-drawer side=\"left\" view-model.ref=\"leftDrawer\" backdrop.bind=\"leftDrawerBackdrop\"\n        over.bind=\"leftDrawerOver\">Left drawer</ux-sidenav-drawer>\n      <ux-sidenav-content>\n        <div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"leftDrawerOver\" model.bind=\"true\"></ux-checkbox>\n            <label>over</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"leftDrawerBackdrop\" model.bind=\"true\"></ux-checkbox>\n            <label>backdrop</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-button click.delegate=\"leftDrawer.toggle()\">Toggle left</ux-button>\n          </div>\n        </div>\n        <div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"bottomDrawerOver\" model.bind=\"true\"></ux-checkbox>\n            <label>over</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"bottomDrawerBackdrop\" model.bind=\"true\"></ux-checkbox>\n            <label>backdrop</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-button click.delegate=\"bottomDrawer.toggle()\">Toggle bottom</ux-button>\n          </div>\n        </div>\n        <div>\n          <div>\n            <div class=\"ux-form__row\">\n              <ux-checkbox checked.bind=\"rightDrawerOver\" model.bind=\"true\"></ux-checkbox>\n              <label>over</label>\n            </div>\n            <div class=\"ux-form__row\">\n              <ux-checkbox checked.bind=\"rightDrawerBackdrop\" model.bind=\"true\"></ux-checkbox>\n              <label>backdrop</label>\n            </div>\n            <div class=\"ux-form__row\">\n              <ux-button click.delegate=\"rightDrawer.toggle()\">Toggle right</ux-button>\n            </div>\n          </div>\n        </div>\n      </ux-sidenav-content>\n      <ux-sidenav-drawer side=\"right\" view-model.ref=\"rightDrawer\" backdrop.bind=\"rightDrawerBackdrop\"\n        over.bind=\"rightDrawerOver\">Right drawer</ux-sidenav-drawer>\n      <ux-sidenav-drawer side=\"bottom\" view-model.ref=\"bottomDrawer\" backdrop.bind=\"bottomDrawerBackdrop\"\n        over.bind=\"bottomDrawerOver\"><div style=\"height: 100px\">Bottom drawer</div></ux-sidenav-drawer>\n    </ux-sidenav>\n  </section>\n\n  <section>\n    <h2>Progress</h2>\n    <ux-field>\n      <label>Mode</label>\n      <div class=\"ux-form__row\">\n        <ux-radio name=\"progressMode\" checked.bind=\"progressIndeterminate\" model.bind=\"true\"></ux-radio>\n        <label>indeterminate</label>\n      </div>\n      <div class=\"ux-form__row\">\n        <ux-radio name=\"progressMode\" checked.bind=\"progressIndeterminate\" model.bind=\"false\"></ux-radio>\n        <label>determinate</label>\n      </div>\n    </ux-field>\n    <ux-slider if.bind=\"!progressIndeterminate\" min=\"0\" max=\"100\" value.bind=\"progressValue\"></ux-slider>\n    <ux-progress value.bind=\"progressValue\"></ux-progress>\n  </section>\n\n  <section>\n    <h2>Lookup</h2>\n    <p>\n      <ux-input label=\"Lookup\"></ux-input>\n      <ux-lookup options.bind=\"lookupOptions\" display-field=\"name\" value.bind=\"lookupValue\">\n        <!-- <template replace-part=\"option\">\n\n        </template> -->\n      </ux-lookup>\n    </p>\n    <p innerhtml.bind=\"lookupValue | json\"></p>\n  </section>\n\n  <section class=\"components\">\n    <h2>Expandable</h2>\n    <ux-expandable accordion>\n      <div slot=\"header\">I'm an accordion 1</div>\n      There can be only one open accordion in a container\n    </ux-expandable>\n    <ux-expandable accordion>\n      <div slot=\"header\">I'm an accordion 2</div>\n      There can be only one open accordion in a container\n    </ux-expandable>\n    <ux-expandable>\n      <div slot=\"header\">I'm not an accordion</div>\n      Content\n    </ux-expandable>\n  </section>\n\n  <section>\n    <h2>Tree view</h2>\n    <ux-tree-view nodes.bind=\"treeViewNodes\">\n      <ux-tree-node>${$node.name}</ux-tree-node>\n    </ux-tree-view>\n  </section>\n</template>\n";
+module.exports = "<template>\n  <require from=\"./theming.css\"></require>\n  <require from='./json-converter'></require>\n  <require from=\"./components.css\"></require>\n\n  <section>\n    <h1>Components</h1>\n    <p>Demo of each component and diverse styles and types</p>\n  </section>\n\n  <section>\n    <h2>Buttons</h2>\n\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"4\">\n        <h4>Primary (default)</h4>\n        <p><ux-button type=\"raised\">Raised</ux-button></p>\n        <p><ux-button type=\"flat\">Flat</ux-button></p>\n        <p><ux-button type=\"text\">Text</ux-button></p>\n        <p><ux-button type=\"outline\">Outline</ux-button></p>\n        <p><ux-button type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"4\">\n        <h4>Accent (.ux-button--accent)</h4>\n        <p><ux-button class=\"ux-button--accent\" type=\"raised\">Raised</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"flat\">Flat</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"text\">Text</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"outline\">Outline</ux-button></p>\n        <p><ux-button class=\"ux-button--accent\" type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"4\">\n        <h4>Disabled (disabled)</h4>\n        <p><ux-button disabled type=\"raised\">Raised</ux-button></p>\n        <p><ux-button disabled type=\"flat\">Flat</ux-button></p>\n        <p><ux-button disabled type=\"text\">Text</ux-button></p>\n        <p><ux-button disabled type=\"outline\">Outline</ux-button></p>\n        <p><ux-button disabled type=\"fab\">Fab</ux-button></p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Input & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Default</h4>\n        <p><ux-input placeholder=\"With placeholder\"></ux-input></p>\n        <p>\n          <ux-input label=\"With floating label\" maxlength.bind=\"50\"></ux-input>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-input class=\"ux-input-component--has-error\" label=\"With error\">\n            <ux-icon icon=\"error\" slot=\"trailing-icon\"></ux-icon>\n          </ux-input>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Icons</h4>\n        <p><ux-input label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input></p>\n        <p><ux-input label=\"With trailing icon\"><ux-icon icon=\"remove_red_eye\" slot=\"trailing-icon\"></ux-icon></ux-input></p>\n        <h4>Outline</h4>\n        <p>\n          <ux-input variant=\"outline\" label=\"With leading icon\"><ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon></ux-input>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-input variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-input>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Textarea & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Filled</h4>\n        <p><ux-textarea placeholder=\"With placeholder\"></ux-textarea></p>\n        <p><ux-textarea label=\"With floating label\" auto-resize></ux-textarea></p>\n        <p><ux-textarea class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea></p>\n        <p><ux-textarea auto-resize label=\"Auto Resize\"></ux-textarea></p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p><ux-textarea variant=\"outline\" label=\"Default\"></ux-textarea></p>\n        <p><ux-textarea variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-textarea></p>\n        <p><ux-textarea variant=\"outline\" auto-resize label=\"Auto Resize\"></ux-textarea></p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Select & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Filled</h4>\n        <p>\n          <ux-select placeholder=\"Choose an option\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select label=\"With floating label\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p>\n          <ux-select variant=\"outline\" placeholder=\"Choose an option\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select label=\"With floating label\" variant=\"outline\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n        <p>\n          <ux-select class=\"ux-input-component--has-error\" label=\"With error\" variant=\"outline\">\n            <ux-option>Option 1</ux-option>\n            <ux-option>Option 2</ux-option>\n            <ux-option>Option 3</ux-option>\n            <ux-option>Option 4</ux-option>\n            <ux-option>Option 5</ux-option>\n          </ux-select>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Datepicker & Input Info</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Default</h4>\n        <p><ux-datepicker placeholder=\"With placeholder\"></ux-datepicker></p>\n        <p>\n          <ux-datepicker label=\"With floating label\"></ux-datepicker>\n          <ux-input-info>And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker label=\"With icon\">\n            <ux-icon icon=\"person\" slot=\"leading-icon\"></ux-icon>\n          </ux-datepicker>\n          <ux-input-info>And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Outline</h4>\n        <p>\n          <ux-datepicker variant=\"outline\" label=\"Outline datepicker\"></ux-datepicker>\n          <ux-input-info ux-input-counter=\"true\">And helper text</ux-input-info>\n        </p>\n        <p>\n          <ux-datepicker variant=\"outline\" class=\"ux-input-component--has-error\" label=\"With error\"></ux-datepicker>\n          <ux-input-info>Error message</ux-input-info>\n        </p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Slider</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Slider (default)</h4>\n        <p><ux-slider min=\"0\" max=\"100\"></ux-slider></p>\n        <h4>With icons</h4>\n        <p>\n          <ux-slider min=\"0\" max=\"100\">\n            <ux-icon icon=\"volume_down\" slot=\"leading-icon\"></ux-icon>\n            <ux-icon icon=\"volume_up\" slot=\"trailing-icon\"></ux-icon>\n          </ux-slider>\n        </p>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>With value</h4>\n        <p>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderRValue\" theme.bind=\"{background: 'red'}\">\n            <span slot=\"leading-icon\">R</span>\n            <span slot=\"trailing-icon\">${sliderRValue}</span>\n          </ux-slider>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderGValue\" theme.bind=\"{background: 'green'}\">\n            <span slot=\"leading-icon\">G</span>\n            <span slot=\"trailing-icon\">${sliderGValue}</span>\n          </ux-slider>\n          <ux-slider min=\"0\" max=\"255\" step=\"1\" value.bind=\"sliderBValue\" theme.bind=\"{background: 'blue'}\">\n            <span slot=\"leading-icon\">B</span>\n            <span slot=\"trailing-icon\">${sliderBValue}</span>\n          </ux-slider>\n        </p>\n        <p style=\"text-align: center;\" css=\"color: rgb(${sliderRValue}, ${sliderGValue}, ${sliderBValue})\">Look at my beautiful color !</p>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Selection Controls: checkbox and radio</h2>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <h4>Checkbox</h4>\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'sport'\"></ux-checkbox>\n            <label>Sport</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'technology'\"></ux-checkbox>\n            <label>Technology</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"interests\" model.bind=\"'business'\"></ux-checkbox>\n            <label>Business</label>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <h4>Radio</h4>\n        <ux-field>\n          <label>Age Group</label>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'0-20'\"></ux-radio>\n            <label>0-20</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'20-40'\"></ux-radio>\n            <label>20-40</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-radio name=\"ageGroup\" checked.bind=\"ageGroup\" model.bind=\"'40+'\"></ux-radio>\n            <label>40+</label>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section>\n    <h2>Selection Controls: chips and lists</h2>\n    <h4>Chips</h4>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <ux-chip-list ux-choice-container.bind=\"interests\">\n            <ux-chip ux-choice=\"sport\">Sport</ux-chip>\n            <ux-chip ux-choice=\"technology\">Technology</ux-chip>\n            <ux-chip ux-choice=\"business\">Business</ux-chip>\n          </ux-chip-list>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <ux-chip-list ux-choice-container.bind=\"ageGroup\">\n            <ux-chip ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-chip>\n            <ux-chip ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-chip>\n            <ux-chip ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-chip>\n          </ux-chip-list>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n\n    <h4>List</h4>\n    <ux-grid class=\"ux-grid--remove-padding\">\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"interests2\">\n              <ux-list-item ux-choice=\"sport\">\n                <div class=\"ux-list-item__content\">Sport</div>\n              </ux-list-item>\n              <ux-list-item ux-choice=\"technology\">\n                <div class=\"ux-list-item__content\">Technology</div>\n              </ux-list-item>\n              <ux-list-item ux-choice=\"business\">\n                <div class=\"ux-list-item__content\">Business</div>\n              </ux-list-item>\n            </ux-list>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n      <ux-grid-cell sm=\"6\">\n        <ux-field>\n          <label>Interests</label>\n          <div class=\"ux-form__row\">\n            <ux-list class=\"ux-list--border\" style=\"width: 100%;\" ux-choice-container.bind=\"ageGroup2\">\n              <ux-list-item ux-choice=\"0-20\"><ux-icon icon=\"looks_one\" slot=\"thumbnail\"></ux-icon>0 - 20</ux-list-item>\n              <ux-list-item ux-choice=\"20-40\"><ux-icon icon=\"looks_two\" slot=\"thumbnail\"></ux-icon>20 - 40</ux-list-item>\n              <ux-list-item ux-choice=\"40+\"><ux-icon icon=\"looks_3\" slot=\"thumbnail\"></ux-icon>40+</ux-list-item>\n            </ux-list>\n          </div>\n        </ux-field>\n      </ux-grid-cell>\n    </ux-grid>\n  </section>\n\n  <section class=\"components\">\n    <h2>Sidenav</h2>\n    <ux-sidenav>\n      <ux-sidenav-drawer side=\"left\" view-model.ref=\"leftDrawer\" backdrop.bind=\"leftDrawerBackdrop\"\n        over.bind=\"leftDrawerOver\">Left drawer</ux-sidenav-drawer>\n      <ux-sidenav-content>\n        <div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"leftDrawerOver\" model.bind=\"true\"></ux-checkbox>\n            <label>over</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"leftDrawerBackdrop\" model.bind=\"true\"></ux-checkbox>\n            <label>backdrop</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-button click.delegate=\"leftDrawer.toggle()\">Toggle left</ux-button>\n          </div>\n        </div>\n        <div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"bottomDrawerOver\" model.bind=\"true\"></ux-checkbox>\n            <label>over</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-checkbox checked.bind=\"bottomDrawerBackdrop\" model.bind=\"true\"></ux-checkbox>\n            <label>backdrop</label>\n          </div>\n          <div class=\"ux-form__row\">\n            <ux-button click.delegate=\"bottomDrawer.toggle()\">Toggle bottom</ux-button>\n          </div>\n        </div>\n        <div>\n          <div>\n            <div class=\"ux-form__row\">\n              <ux-checkbox checked.bind=\"rightDrawerOver\" model.bind=\"true\"></ux-checkbox>\n              <label>over</label>\n            </div>\n            <div class=\"ux-form__row\">\n              <ux-checkbox checked.bind=\"rightDrawerBackdrop\" model.bind=\"true\"></ux-checkbox>\n              <label>backdrop</label>\n            </div>\n            <div class=\"ux-form__row\">\n              <ux-button click.delegate=\"rightDrawer.toggle()\">Toggle right</ux-button>\n            </div>\n          </div>\n        </div>\n      </ux-sidenav-content>\n      <ux-sidenav-drawer side=\"right\" view-model.ref=\"rightDrawer\" backdrop.bind=\"rightDrawerBackdrop\"\n        over.bind=\"rightDrawerOver\">Right drawer</ux-sidenav-drawer>\n      <ux-sidenav-drawer side=\"bottom\" view-model.ref=\"bottomDrawer\" backdrop.bind=\"bottomDrawerBackdrop\"\n        over.bind=\"bottomDrawerOver\"><div style=\"height: 100px\">Bottom drawer</div></ux-sidenav-drawer>\n    </ux-sidenav>\n  </section>\n\n  <section>\n    <h2>Progress</h2>\n    <ux-field>\n      <label>Mode</label>\n      <div class=\"ux-form__row\">\n        <ux-radio name=\"progressMode\" checked.bind=\"progressIndeterminate\" model.bind=\"true\"></ux-radio>\n        <label>indeterminate</label>\n      </div>\n      <div class=\"ux-form__row\">\n        <ux-radio name=\"progressMode\" checked.bind=\"progressIndeterminate\" model.bind=\"false\"></ux-radio>\n        <label>determinate</label>\n      </div>\n    </ux-field>\n    <ux-slider if.bind=\"!progressIndeterminate\" min=\"0\" max=\"100\" value.bind=\"progressValue\"></ux-slider>\n    <ux-progress value.bind=\"progressValue\"></ux-progress>\n  </section>\n\n  <section>\n    <h2>Lookup</h2>\n    <p>\n      <ux-input label=\"Lookup\"></ux-input>\n      <ux-lookup options.bind=\"lookupOptions\" display-field=\"name\" value.bind=\"lookupValue\">\n        <!-- <template replace-part=\"option\">\n\n        </template> -->\n      </ux-lookup>\n    </p>\n    <p innerhtml.bind=\"lookupValue | json\"></p>\n  </section>\n\n  <section class=\"components\">\n    <h2>Expandable</h2>\n    <ux-expandable accordion>\n      <div slot=\"header\">I'm an accordion 1</div>\n      There can be only one open accordion in a container\n    </ux-expandable>\n    <ux-expandable accordion>\n      <div slot=\"header\">I'm an accordion 2</div>\n      There can be only one open accordion in a container\n    </ux-expandable>\n    <ux-expandable>\n      <div slot=\"header\">I'm not an accordion</div>\n      Content\n    </ux-expandable>\n  </section>\n\n  <section>\n    <h2>Tree view</h2>\n    <ux-tree-view nodes.bind=\"treeViewNodes\">\n      <ux-tree-node>${$node.name}</ux-tree-node>\n    </ux-tree-view>\n  </section>\n\n  <section>\n    <h2>Popup</h2>\n    <ux-button ref=\"trigger1\">Click me</ux-button>  \n    <ux-popup trigger.bind=\"trigger1\">\n      <div class=\"ux-popup__option\"><a>Option 1</a></div>\n      <div class=\"ux-popup__option\"><a>Option 2</a></div>\n      <div class=\"ux-popup__option\"><a>Option 3</a></div>\n    </ux-popup>\n\n    <ux-button ref=\"trigger2\">Random content</ux-button>  \n    <ux-popup trigger.bind=\"trigger2\" autoclose.bind=\"false\" view-model.ref=\"popup\">\n      <ux-card style=\"margin-bottom: 0\">\n        <ux-card-content>\n          Random content\n        </ux-card-content>\n        <ux-card-footer>\n          <ux-button type=\"text\">Action</ux-button>\n          <ux-button click.delegate=\"popup.close()\">Close</ux-button>\n        </ux-card-footer>\n      </ux-card>\n    </ux-popup>\n  </section>\n\n</template>\n";
 
 /***/ }),
 
@@ -57612,4 +57877,4 @@ module.exports = "<template>\n  <require from=\"./theming.css\"></require>\n  <r
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.940b9ae9483e53ad751c.bundle.map
+//# sourceMappingURL=app.4bfb384316c7d93fa2ae.bundle.map
